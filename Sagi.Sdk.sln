@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sagi.Sdk.Domain", "Sagi.Sdk.Domain", "{E3221332-D90B-43BB-A66F-FB9027C8C96C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D62640A3-45DD-48AD-8196-8DEC8E1C4C0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sagi.Sdk.Domain", "Sagi.Sdk.Domain\src\Sagi.Sdk.Domain\Sagi.Sdk.Domain.csproj", "{CD2B42F0-0982-4FB7-9C33-2A5D187E97C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F5970CE9-520F-431D-980A-0107922C1AC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sagi.Sdk.Domain.Tests", "Sagi.Sdk.Domain\tests\Sagi.Sdk.Domain.Tests\Sagi.Sdk.Domain.Tests.csproj", "{018FFFA7-6149-4C58-8AC8-CD2E18CB5487}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sagi.Sdk.Results", "Sagi.Sdk.Results", "{B2937587-4E57-486C-94A0-9C6F88F416DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{995B6B77-D596-4C46-AF30-C477498BCD32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sagi.Sdk.Results", "Sagi.Sdk.Results\src\Sagi.Sdk.Results\Sagi.Sdk.Results.csproj", "{3EAF9DF5-35E4-45FD-8BBF-43EEE2F82B33}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{79F6B4A5-2748-46D2-92F5-128B0839F80F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sagi.Sdk.Results.Tests", "Sagi.Sdk.Results\tests\Sagi.Sdk.Results.Tests\Sagi.Sdk.Results.Tests.csproj", "{220DF32C-7E07-4B51-A16F-00A7E83BEDAC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CD2B42F0-0982-4FB7-9C33-2A5D187E97C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD2B42F0-0982-4FB7-9C33-2A5D187E97C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD2B42F0-0982-4FB7-9C33-2A5D187E97C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD2B42F0-0982-4FB7-9C33-2A5D187E97C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{018FFFA7-6149-4C58-8AC8-CD2E18CB5487}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{018FFFA7-6149-4C58-8AC8-CD2E18CB5487}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{018FFFA7-6149-4C58-8AC8-CD2E18CB5487}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{018FFFA7-6149-4C58-8AC8-CD2E18CB5487}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EAF9DF5-35E4-45FD-8BBF-43EEE2F82B33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EAF9DF5-35E4-45FD-8BBF-43EEE2F82B33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EAF9DF5-35E4-45FD-8BBF-43EEE2F82B33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EAF9DF5-35E4-45FD-8BBF-43EEE2F82B33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{220DF32C-7E07-4B51-A16F-00A7E83BEDAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{220DF32C-7E07-4B51-A16F-00A7E83BEDAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{220DF32C-7E07-4B51-A16F-00A7E83BEDAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{220DF32C-7E07-4B51-A16F-00A7E83BEDAC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D62640A3-45DD-48AD-8196-8DEC8E1C4C0B} = {E3221332-D90B-43BB-A66F-FB9027C8C96C}
+		{CD2B42F0-0982-4FB7-9C33-2A5D187E97C3} = {D62640A3-45DD-48AD-8196-8DEC8E1C4C0B}
+		{F5970CE9-520F-431D-980A-0107922C1AC9} = {E3221332-D90B-43BB-A66F-FB9027C8C96C}
+		{018FFFA7-6149-4C58-8AC8-CD2E18CB5487} = {F5970CE9-520F-431D-980A-0107922C1AC9}
+		{995B6B77-D596-4C46-AF30-C477498BCD32} = {B2937587-4E57-486C-94A0-9C6F88F416DE}
+		{3EAF9DF5-35E4-45FD-8BBF-43EEE2F82B33} = {995B6B77-D596-4C46-AF30-C477498BCD32}
+		{79F6B4A5-2748-46D2-92F5-128B0839F80F} = {B2937587-4E57-486C-94A0-9C6F88F416DE}
+		{220DF32C-7E07-4B51-A16F-00A7E83BEDAC} = {79F6B4A5-2748-46D2-92F5-128B0839F80F}
+	EndGlobalSection
+EndGlobal
