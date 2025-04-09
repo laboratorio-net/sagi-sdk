@@ -3,7 +3,7 @@ namespace Sagi.Sdk.Results.Tests;
 public class ErrorTests
 {
     [Fact]
-    public void Error_ShouldInitializeCorrectly()
+    public void ShouldInitializeCorrectly()
     {
         var code = "TestCode";
         var message = "Test message";

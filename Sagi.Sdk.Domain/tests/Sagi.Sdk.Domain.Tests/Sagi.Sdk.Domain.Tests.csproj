@@ -17,6 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../../Sagi.Sdk.Results/src/Sagi.Sdk.Results/Sagi.Sdk.Results.csproj" />
+    <ProjectReference Include="../../src/Sagi.Sdk.Domain/Sagi.Sdk.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 
