@@ -6,9 +6,10 @@ namespace Sagi.Sdk.MongoDb.Context;
 
 public abstract class MongoContext<T> : IMongoContext<T> where T : Document
 {
-    public MongoContext(IMongoDatabase database) => Collection = database.GetCollection<T>(CollectionName);
+    public MongoContext(IMongoDatabase database) 
+        => Collection = database.GetCollection<T>(CollectionName);
 
-    protected abstract string CollectionName { get; }
+    public abstract string CollectionName { get; }
 
     protected IMongoCollection<T> Collection { get; }
 
@@ -28,6 +29,12 @@ public abstract class MongoContext<T> : IMongoContext<T> where T : Document
 
     public Task InsertAsync(T model, CancellationToken cancellationToken = default) =>
         Collection.InsertOneAsync(model, options: null, cancellationToken);
+
+    public Task InserMany(List<T> models, CancellationToken cancellationToken = default)
+    {
+        InsertManyOptions options = new();
+        return Collection.InsertManyAsync(models, options, cancellationToken);
+    }
 
     public Task UpdateAsync(T model, CancellationToken cancellationToken = default)
     {

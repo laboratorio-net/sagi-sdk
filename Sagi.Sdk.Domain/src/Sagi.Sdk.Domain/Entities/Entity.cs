@@ -75,7 +75,7 @@ public abstract class Entity<T>
         if (ReferenceEquals(this, compareTo)) return true;
         if (ReferenceEquals(null, compareTo)) return false;
 
-        return Id.Equals(compareTo.Id);
+        return Id!.Equals(compareTo.Id);
     }
 
     public static bool operator ==(Entity<T> a, Entity<T> b)
