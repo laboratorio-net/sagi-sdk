@@ -6,26 +6,26 @@ using RabbitMQ.Client.Events;
 
 namespace Sagi.Sdk.Messaging.RabbitMq.Consumers;
 
-public class SagiConsumer<TMessage> : 
+public class SagiConsumer<TMessage> :
     ISagiConsumer<TMessage> where TMessage : class
 {
-    private readonly Message<TMessage> _message;
-    private readonly IChannel _channel;
-    private readonly IConsumer<TMessage> _consumer;
-
     public SagiConsumer(
         Message<TMessage> message,
         IChannel channel,
         IConsumer<TMessage> consumer)
     {
-        _message = message ?? throw new ArgumentNullException(nameof(message));
-        _channel = channel ?? throw new ArgumentNullException(nameof(channel));
-        _consumer = consumer ?? throw new ArgumentNullException(nameof(consumer));
+        Message = message ?? throw new ArgumentNullException(nameof(message));
+        Channel = channel ?? throw new ArgumentNullException(nameof(channel));
+        Consumer = consumer ?? throw new ArgumentNullException(nameof(consumer));
     }
+
+    private Message<TMessage> Message { get; }
+    private IChannel Channel { get; }
+    private IConsumer<TMessage> Consumer { get; }
 
     public async Task ConsumeAsync()
     {
-        var consumer = new AsyncEventingBasicConsumer(_channel);
+        var consumer = new AsyncEventingBasicConsumer(Channel);
         ConfigureReceiver(consumer);
         await ConsumeAsync(consumer);
     }
@@ -38,25 +38,26 @@ public class SagiConsumer<TMessage> :
             var message = Encoding.UTF8.GetString(body);
             ArgumentException.ThrowIfNullOrEmpty(message);
 
-            _message.Body = JsonSerializer.Deserialize<TMessage>(message)!;
-            await _consumer.ConsumeAsync(_message);
+            Message.Body = JsonSerializer.Deserialize<TMessage>(message)!;
+            await Consumer.ConsumeAsync(Message);
 
-            if (_message.AutoAck == true)
+            if (Message.AutoAck == true)
             {
-                await _channel.BasicAckAsync(
+                await Channel.BasicAckAsync(
                     ea.DeliveryTag,
                     multiple: false,
-                    _message.CancellationToken);
+                    Message.CancellationToken);
             }
         };
     }
 
     private Task ConsumeAsync(AsyncEventingBasicConsumer consumer)
-        => _channel.BasicConsumeAsync(
-            queue: _message.QueueName!,
-            autoAck: _message.AutoAck,
+    {
+        return Channel.BasicConsumeAsync(
+            queue: Message.QueueName!,
+            autoAck: Message.AutoAck,
             consumer: consumer,
-            cancellationToken: _message.CancellationToken
+            cancellationToken: Message.CancellationToken
         );
-
+    }
 }
