@@ -25,7 +25,6 @@ public class SagiConsumer<TMessage> :
 
     public async Task ConsumeAsync()
     {
-        await ConfigureChannelAsync();
         var consumer = new AsyncEventingBasicConsumer(_channel);
         ConfigureReceiver(consumer);
         await ConsumeAsync(consumer);
@@ -51,16 +50,6 @@ public class SagiConsumer<TMessage> :
             }
         };
     }
-
-    private Task ConfigureChannelAsync()
-        => _channel.QueueDeclareAsync(
-            queue: _message.QueueName!,
-            durable: _message.Durable,
-            exclusive: _message.Exclusive,
-            autoDelete: _message.AutoDelete,
-            arguments: _message.Arguments!,
-            cancellationToken: _message.CancellationToken
-        );
 
     private Task ConsumeAsync(AsyncEventingBasicConsumer consumer)
         => _channel.BasicConsumeAsync(

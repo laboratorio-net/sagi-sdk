@@ -17,7 +17,6 @@ public class FakeConsumer : IConsumer<FakeMessage>
     public Task ConsumeAsync(Message<FakeMessage> message)
     {
         Console.WriteLine(JsonSerializer.Serialize(message.Body));
-
         return Task.CompletedTask;
     }
 }
@@ -37,11 +36,7 @@ public class IntegrationTestsFixture
         }, config => config.ConfigureEndpoint<FakeMessage>(endpoint =>
         {
             endpoint.QueueName = "fake.messages.tests.new";
-            endpoint.ConfigureConsumer<FakeConsumer>(c =>
-            {
-                c.Durable = true;
-                c.AutoAck = true;
-            });
+            endpoint.ConfigureConsumer<FakeConsumer>(c => c.AutoAck = true);
         }));
 
         ServiceProvider = services.BuildServiceProvider();
