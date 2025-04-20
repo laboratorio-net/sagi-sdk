@@ -1,6 +1,4 @@
-using Sagi.Sdk.MongoDb.Tests.Docker;
-
-namespace Sagi.Sdk.MongoDb.Tests.Fixtures;
+namespace Sagi.Sdk.MongoDb.Tests.Fixtures.Docker;
 
 [CollectionDefinition("Mongo Docker Container")]
 public class DockerCollection :

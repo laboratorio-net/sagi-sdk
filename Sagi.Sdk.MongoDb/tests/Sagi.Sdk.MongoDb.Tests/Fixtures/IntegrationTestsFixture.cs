@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Sagi.Sdk.MongoDb.Context;
 using Sagi.Sdk.MongoDb.Extensions;
-using Sagi.Sdk.MongoDb.Tests.Fakes;
+using Sagi.Sdk.MongoDb.Tests.Fixtures.Fakes;
 
 namespace Sagi.Sdk.MongoDb.Tests.Fixtures;
 

@@ -1,4 +1,4 @@
-namespace Sagi.Sdk.Messaging.RabbitMq.Tests.Fakers;
+namespace Sagi.Sdk.Messaging.RabbitMq.Tests.Fixtures.Fakers;
 
 public class FakeMessage
 {

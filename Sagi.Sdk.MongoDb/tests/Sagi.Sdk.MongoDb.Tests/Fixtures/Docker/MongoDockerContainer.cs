@@ -1,7 +1,7 @@
 using Ductus.FluentDocker.Builders;
 using Ductus.FluentDocker.Services;
 
-namespace Sagi.Sdk.MongoDb.Tests.Docker;
+namespace Sagi.Sdk.MongoDb.Tests.Fixtures.Docker;
 
 public class MongoDockerContainer : IDisposable
 {

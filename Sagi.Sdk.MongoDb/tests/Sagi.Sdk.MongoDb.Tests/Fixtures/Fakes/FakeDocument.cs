@@ -1,6 +1,6 @@
 using Sagi.Sdk.MongoDb.Context;
 
-namespace Sagi.Sdk.MongoDb.Tests.Fakes;
+namespace Sagi.Sdk.MongoDb.Tests.Fixtures.Fakes;
 
 public class FakeDocument : Document
 {
@@ -14,5 +14,5 @@ public class FakeDocument : Document
     }
 
     public override int GetHashCode()
-        => (GetType().GetHashCode() * 907) + Id.GetHashCode();
+        => GetType().GetHashCode() * 907 + Id.GetHashCode();
 }

@@ -1,8 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using Sagi.Sdk.Messaging.RabbitMq.Consumers;
-using Sagi.Sdk.Messaging.RabbitMq.Tests.Fakers;
 using Sagi.Sdk.Messaging.RabbitMq.Tests.Fixtures;
+using Sagi.Sdk.Messaging.RabbitMq.Tests.Fixtures.Fakers;
 
 namespace Sagi.Sdk.Messaging.RabbitMq.Tests.Consumers;
 

@@ -3,8 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 
 using Sagi.Sdk.MongoDb.Context;
-using Sagi.Sdk.MongoDb.Tests.Fakes;
 using Sagi.Sdk.MongoDb.Tests.Fixtures;
+using Sagi.Sdk.MongoDb.Tests.Fixtures.Docker;
+using Sagi.Sdk.MongoDb.Tests.Fixtures.Fakes;
 
 namespace Sagi.Sdk.MongoDb.Tests;
 

@@ -2,7 +2,7 @@ using System.Text.Json;
 
 using Sagi.Sdk.Messaging.RabbitMq.Consumers;
 
-namespace Sagi.Sdk.Messaging.RabbitMq.Tests.Fakers;
+namespace Sagi.Sdk.Messaging.RabbitMq.Tests.Fixtures.Fakers;
 
 public class FakeConsumer : IConsumer<FakeMessage>
 {
