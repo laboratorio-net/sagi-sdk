@@ -1,6 +1,3 @@
-using System.Text;
-using System.Text.Json;
-
 using RabbitMQ.Client;
 
 namespace Sagi.Sdk.Messaging.RabbitMq.Producers;
@@ -10,36 +7,40 @@ public class SagiProducer<TMessage> :
 {
     public SagiProducer(
         IChannel channel,
+        IConnectionFactory factory,
         Message<TMessage> message)
     {
         ArgumentNullException.ThrowIfNull(message);
         ArgumentNullException.ThrowIfNull(channel);
+        ArgumentNullException.ThrowIfNull(factory);
 
         Channel = channel;
         Message = message;
+        User = factory.UserName;
     }
 
     internal IChannel Channel { get; }
     internal Message<TMessage> Message { get; }
+    internal string User { get; }
 
-    public async Task PublishAsync(TMessage message, CancellationToken cancellationToken)
-    {
-        var body = BuildMessage(message);
-        var props = new BasicProperties();
+    public Task PublishAsync(TMessage message, CancellationToken cancellationToken) 
+        => PublishAsync(message, [], cancellationToken);
 
-        await Channel.BasicPublishAsync(
-            Message.ExchangeName,
-            Message.RoutingKey,
-            Message.Mandatory,
-            props,
-            body,
-            cancellationToken);
-    }
-
-    private static byte[] BuildMessage(TMessage message)
+    public async Task PublishAsync(
+        TMessage message,
+        IEnumerable<KeyValuePair<string, object>> headers,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(message);
-        var json = JsonSerializer.Serialize(message);
-        return Encoding.UTF8.GetBytes(json);
+        var messageBody = Message.GetBodyBytes(message);
+        var properties = Message.CreateProperties(User, headers);
+
+        await Channel.BasicPublishAsync(
+            Message?.ExchangeName!,
+            Message?.RoutingKey ?? "",
+            Message.Mandatory,
+            properties,
+            messageBody,
+            cancellationToken);
     }
 }

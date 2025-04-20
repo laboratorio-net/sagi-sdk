@@ -1,27 +1,24 @@
-using System.Text;
-using System.Text.Json;
-
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 namespace Sagi.Sdk.Messaging.RabbitMq.Consumers;
 
-public class SagiConsumer<TMessage> :
-    ISagiConsumer<TMessage> where TMessage : class
+public class SagiConsumer<TBody> :
+    ISagiConsumer<TBody> where TBody : class
 {
     public SagiConsumer(
-        Message<TMessage> message,
+        Message<TBody> message,
         IChannel channel,
-        IConsumer<TMessage> consumer)
+        IConsumer<TBody> consumer)
     {
         Message = message ?? throw new ArgumentNullException(nameof(message));
         Channel = channel ?? throw new ArgumentNullException(nameof(channel));
         Consumer = consumer ?? throw new ArgumentNullException(nameof(consumer));
     }
 
-    private Message<TMessage> Message { get; }
+    private Message<TBody> Message { get; }
     private IChannel Channel { get; }
-    private IConsumer<TMessage> Consumer { get; }
+    private IConsumer<TBody> Consumer { get; }
 
     public async Task ConsumeAsync()
     {
@@ -33,12 +30,8 @@ public class SagiConsumer<TMessage> :
     private void ConfigureReceiver(AsyncEventingBasicConsumer consumer)
     {
         consumer.ReceivedAsync += async (model, ea) =>
-        {
-            var body = ea.Body.ToArray();
-            var message = Encoding.UTF8.GetString(body);
-            ArgumentException.ThrowIfNullOrEmpty(message);
-
-            Message.Body = JsonSerializer.Deserialize<TMessage>(message)!;
+        {            
+            Message.LoadBody(ea.Body);
             await Consumer.ConsumeAsync(Message);
 
             if (Message.AutoAck == true)

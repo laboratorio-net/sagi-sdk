@@ -61,7 +61,7 @@ public static class RabbitMqExtensions
 
         Connection = factory.CreateConnectionAsync(Token).Result;
 
-        services.AddSingleton(factory);
+        services.AddSingleton<IConnectionFactory>(factory);
         services.AddSingleton<IConnection>(Connection);
         services.AddSingleton<IChannel>(provider =>
         {
@@ -77,4 +77,3 @@ public static class RabbitMqExtensions
         Source.Dispose();
     }
 }
-
