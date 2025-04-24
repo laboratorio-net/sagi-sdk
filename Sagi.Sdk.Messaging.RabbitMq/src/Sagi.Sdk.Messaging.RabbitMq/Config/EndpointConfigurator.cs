@@ -14,6 +14,7 @@ public class EndpointConfigurator<TMessage> where TMessage : class
         Arguments = new Dictionary<string, object>();
         Token = cancellationToken;
         Services = services;
+        PrefetchCount = 10;
     }
 
     public string QueueName { get; set; } = string.Empty;
@@ -23,6 +24,7 @@ public class EndpointConfigurator<TMessage> where TMessage : class
     public bool Exclusive { get; set; } = false;
     public bool AutoDelete { get; set; } = false;
     public IDictionary<string, object> Arguments { get; set; }
+    public ushort PrefetchCount { get; set; }
     private CancellationToken Token { get; }
     private IServiceCollection Services { get; }
 
@@ -35,14 +37,15 @@ public class EndpointConfigurator<TMessage> where TMessage : class
             QueueName = QueueName,
             ExchangeName = ExchangeName,
         };
-        action.Invoke(message);
-        Services.AddSingleton(message);
 
+        action.Invoke(message);
+
+        Services.AddSingleton(message);
         Services.AddSingleton<IConsumer<TMessage>, TConsumer>();
-        Services.AddSingleton(typeof(ISagiConsumer<>), typeof(SagiConsumer<>));
+        Services.AddHostedService<SagiConsumer<TMessage>>();
     }
 
-    public void ConfigureProducer()
+    internal void ConfigureProducer()
     {
         Services.AddSingleton<IProducer<TMessage>, SagiProducer<TMessage>>();
     }

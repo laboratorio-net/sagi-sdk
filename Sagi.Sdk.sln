@@ -43,6 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{1C67F0A8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sagi.Sdk.Messaging.RabbitMq.Tests", "Sagi.Sdk.Messaging.RabbitMq\tests\Sagi.Sdk.Messaging.RabbitMq.Tests\Sagi.Sdk.Messaging.RabbitMq.Tests.csproj", "{04C142C6-841B-412D-A1A1-AD5135614B4F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "Sagi.Sdk.Messaging.RabbitMq\src\ConsoleApp\ConsoleApp.csproj", "{698D46C2-D129-40AA-B477-AA9BEC29841F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +86,10 @@ Global
 		{04C142C6-841B-412D-A1A1-AD5135614B4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04C142C6-841B-412D-A1A1-AD5135614B4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04C142C6-841B-412D-A1A1-AD5135614B4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{698D46C2-D129-40AA-B477-AA9BEC29841F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{698D46C2-D129-40AA-B477-AA9BEC29841F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{698D46C2-D129-40AA-B477-AA9BEC29841F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{698D46C2-D129-40AA-B477-AA9BEC29841F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D62640A3-45DD-48AD-8196-8DEC8E1C4C0B} = {E3221332-D90B-43BB-A66F-FB9027C8C96C}
@@ -102,5 +108,6 @@ Global
 		{D1DEE51A-5737-4E02-BA4B-3C53304159B2} = {1010B625-F2B0-44BA-B226-7F81197C2708}
 		{1C67F0A8-D65E-4209-A8B1-93F3A0EB096E} = {5D6EF00C-F59C-4FD0-8017-575E61DAC528}
 		{04C142C6-841B-412D-A1A1-AD5135614B4F} = {1C67F0A8-D65E-4209-A8B1-93F3A0EB096E}
+		{698D46C2-D129-40AA-B477-AA9BEC29841F} = {1010B625-F2B0-44BA-B226-7F81197C2708}
 	EndGlobalSection
 EndGlobal

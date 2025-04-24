@@ -21,7 +21,7 @@ public class Message<TBody> where TBody : class
         UserId = string.Empty;
     }
 
-    public TBody? Body { get; set; }
+    public TBody? Body { get; internal set; }
     public IDictionary<string, object> Headers { get; set; }
     public string QueueName { get; set; }
     public CancellationToken CancellationToken { get; internal set; }
@@ -35,21 +35,21 @@ public class Message<TBody> where TBody : class
     public string AppId { get; set; }
     public string UserId { get; set; }
 
-    public byte[] GetBodyBytes(TBody body)
+    internal byte[] GetBodyBytes(TBody body)
     {
         ArgumentNullException.ThrowIfNull(body);
         var json = JsonSerializer.Serialize(body);
         return Encoding.UTF8.GetBytes(json);
     }
 
-    public void LoadBody(ReadOnlyMemory<byte> body)
+    internal void LoadBody(ReadOnlyMemory<byte> body)
     {
         var array = body.ToArray();
         var message = Encoding.UTF8.GetString(array);
         Body = JsonSerializer.Deserialize<TBody>(message)!;
     }
 
-    public void LoadProperties(BasicProperties prop)
+    internal void LoadProperties(BasicProperties prop)
     {
         MessageId = prop.MessageId;
         Timestamp = DateTimeOffset.FromUnixTimeSeconds(prop.Timestamp.UnixTime).UtcDateTime;
@@ -63,7 +63,7 @@ public class Message<TBody> where TBody : class
         }
     }
 
-    public BasicProperties CreateProperties(string user,
+    internal BasicProperties CreateProperties(string user,
         IEnumerable<KeyValuePair<string, object>> headers)
     {
         ArgumentNullException.ThrowIfNull(headers);

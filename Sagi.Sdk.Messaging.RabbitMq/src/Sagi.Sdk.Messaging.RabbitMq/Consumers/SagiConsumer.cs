@@ -1,10 +1,11 @@
+using Microsoft.Extensions.Hosting;
+
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 namespace Sagi.Sdk.Messaging.RabbitMq.Consumers;
 
-public class SagiConsumer<TBody> :
-    ISagiConsumer<TBody> where TBody : class
+public class SagiConsumer<TBody> : BackgroundService where TBody : class
 {
     public SagiConsumer(
         Message<TBody> message,
@@ -20,7 +21,19 @@ public class SagiConsumer<TBody> :
     private IChannel Channel { get; }
     private IConsumer<TBody> Consumer { get; }
 
-    public async Task ConsumeAsync()
+    public override Task StartAsync(CancellationToken cancellationToken)
+    {
+        Console.WriteLine($"Consumer [{Consumer.GetType().Name}] has been started.");
+        return base.StartAsync(cancellationToken);
+    }
+
+    public override Task StopAsync(CancellationToken cancellationToken)
+    {
+        Console.WriteLine($"Consumer [{Consumer.GetType().Name}] has been stopped.");
+        return base.StopAsync(cancellationToken);
+    }
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var consumer = new AsyncEventingBasicConsumer(Channel);
         ConfigureReceiver(consumer);
@@ -45,7 +58,7 @@ public class SagiConsumer<TBody> :
     }
 
     private Task ConsumeAsync(AsyncEventingBasicConsumer consumer)
-    {
+    {        
         return Channel.BasicConsumeAsync(
             queue: Message.QueueName!,
             autoAck: Message.AutoAck,
