@@ -8,16 +8,16 @@ on:
       - main
 jobs:
   versioning:
-    uses: leandro-alves-labs/actions/.github/workflows/git-version.yaml@v1.0.0
+    uses: laboratorio-net/actions/.github/workflows/git-version.yaml@v1.0.0
 
   build:
-    uses: leandro-alves-labs/actions/.github/workflows/build-net.yaml@v1.0.0
+    uses: laboratorio-net/actions/.github/workflows/build-net.yaml@v1.0.0
     needs: Versioning
     with:
       solution-name: Sagi.Sdk.sln
 
   tag:
-    uses: leandro-alves-labs/actions/.github/workflows/create-tag.yaml@v1.0.0
+    uses: laboratorio-net/actions/.github/workflows/create-tag.yaml@v1.0.0
     needs: [versioning, build]
     with:
       version: ${{needs.versioning.outputs.version}}
