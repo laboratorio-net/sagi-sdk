@@ -1,2 +1,8 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using Sagi.Sdk.AWS.DynamoDb.Hosting;
+
+await DynamoDbHosting.RunAsync();
+
+Console.CancelKeyPress += (obj, args )=>
+{
+    DynamoDbHosting.StopAsync().Wait();
+};

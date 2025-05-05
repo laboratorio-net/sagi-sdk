@@ -1,6 +1,8 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+
 using Microsoft.Extensions.DependencyInjection;
+
 using Sagi.Sdk.AWS.DynamoDb.Initializers;
 using Sagi.Sdk.AWS.DynamoDb.Options;
 
@@ -24,13 +26,14 @@ public static class DynamoConfigExtensions
         var client = new AmazonDynamoDBClient(
             options.Accesskey,
             options.SecretKey,
-            options.SessionToken,
+            // options.SessionToken,
             config
         );
 
         services.AddSingleton(options);
         services.AddSingleton(client);
         services.AddSingleton<IDynamoDBContext>(new DynamoDBContext(client));
+        services.AddSingleton<IDynamoDbTableInitializer, TablesInitializer>();
 
         if (options.InitializeDb)
         {

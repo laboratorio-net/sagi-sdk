@@ -16,7 +16,7 @@
   </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Sagi.Sdk.Results\src\Sagi.Sdk.Results\Sagi.Sdk.Results.csproj" />
+      <ProjectReference Include="../../../Sagi.Sdk.Results/src/Sagi.Sdk.Results/Sagi.Sdk.Results.csproj" />
     </ItemGroup>
 
 </Project>
