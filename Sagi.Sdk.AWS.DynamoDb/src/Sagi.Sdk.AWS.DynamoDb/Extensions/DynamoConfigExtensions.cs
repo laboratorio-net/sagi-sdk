@@ -32,6 +32,7 @@ public static class DynamoConfigExtensions
 
         services.AddSingleton(options);
         services.AddSingleton(client);
+        services.AddSingleton<IAmazonDynamoDB>(client);
         services.AddSingleton<IDynamoDBContext>(new DynamoDBContext(client));
         services.AddSingleton<IDynamoDbTableInitializer, TablesInitializer>();
 
@@ -54,6 +55,7 @@ public static class DynamoConfigExtensions
         var client = new AmazonDynamoDBClient(config);
         services.AddSingleton(client);
 
+        services.AddSingleton<IAmazonDynamoDB>(client);
         services.AddAWSService<IAmazonDynamoDB>(new DynamoDbOptions());
         services.AddSingleton<IDynamoDBContext>(new DynamoDBContext(client));
 

@@ -15,6 +15,8 @@ public class FirstTable : CreateTableRequest
         [
             new ("PartitionKey", ScalarAttributeType.S),
             new ("SortKey", ScalarAttributeType.S),
+            new ("Status", ScalarAttributeType.S),
+            new ("CreatedAt", ScalarAttributeType.S),
         ];
         KeySchema =
         [
