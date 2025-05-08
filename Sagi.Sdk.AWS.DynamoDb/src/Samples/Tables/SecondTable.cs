@@ -5,7 +5,8 @@ namespace Samples.Tables;
 
 public class SecondTable : CreateTableRequest
 {
-    public const string TABLE_NAME = "Sample.SecondTable.Table";
+    public const string TABLE_NAME = "Sample.Second.Table";
+    
     public SecondTable()
     {
         TableName = TABLE_NAME;
