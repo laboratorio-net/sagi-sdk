@@ -1,14 +1,12 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
-using Sagi.Sdk.AWS.DynamoDb.Indexes;
-using Sagi.Sdk.AWS.DynamoDb.Options;
 
-namespace Sagi.Sdk.AWS.DynamoDb.Tables;
+namespace Samples.Tables;
 
-public class FirstTable : CreateTableRequest
+public class SecondTable : CreateTableRequest
 {
-    public const string TABLE_NAME = "Sample.First.Table";
-    public FirstTable(DynamoDbOptions options)
+    public const string TABLE_NAME = "Sample.SecondTable.Table";
+    public SecondTable()
     {
         TableName = TABLE_NAME;
         AttributeDefinitions =
@@ -21,10 +19,8 @@ public class FirstTable : CreateTableRequest
             new ("PartitionKey", KeyType.HASH),
             new ("SortKey", KeyType.RANGE),
         ];
-        BillingMode = options.BillingMode;
-        GlobalSecondaryIndexes = [
-            new GetByStatusIndex(),
-        ];
+        BillingMode = BillingMode.PAY_PER_REQUEST;;
+        GlobalSecondaryIndexes = [];
     }
 }
 
