@@ -13,15 +13,14 @@ public class FirstTable : CreateTableRequest
         TableName = TABLE_NAME;
         AttributeDefinitions =
         [
-            new ("PartitionKey", ScalarAttributeType.S),
-            new ("SortKey", ScalarAttributeType.S),
-            new("CreatedAt", ScalarAttributeType.S),
-            new("Status", ScalarAttributeType.S),
+            new (nameof(Order.Id), ScalarAttributeType.S),
+            new(nameof(Order.CreatedAt), ScalarAttributeType.S),
+            new(nameof(Order.Status), ScalarAttributeType.S),
         ];
         KeySchema =
         [
-            new ("PartitionKey", KeyType.HASH),
-            new ("SortKey", KeyType.RANGE),
+            new (nameof(Order.Id), KeyType.HASH),
+            new (nameof(Order.CreatedAt), KeyType.RANGE),
         ];
         BillingMode = BillingMode.PAY_PER_REQUEST;
         GlobalSecondaryIndexes = [
@@ -29,4 +28,3 @@ public class FirstTable : CreateTableRequest
         ];
     }
 }
-

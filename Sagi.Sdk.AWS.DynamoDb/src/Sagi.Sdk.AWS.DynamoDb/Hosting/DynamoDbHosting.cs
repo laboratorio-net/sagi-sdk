@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using Sagi.Sdk.AWS.DynamoDb.Config;
@@ -10,12 +11,29 @@ public class DynamoDbHosting
     public static IServiceProvider? Provider { get; private set; }
     private static IHost? DynamoDbHost { get; set; }
 
-    public static async Task RunAsync(Action<DynamoDbConfigurator> action)
+    public static async Task RunAsync(Action<DynamoDbConfigurator> configurator)
     {
         DynamoDbHost = Host
             .CreateDefaultBuilder()
-            .ConfigureServices(services => 
-                services.AddDynamoDb(action))
+            .ConfigureServices(services =>
+                services.AddDynamoDb(configurator))
+            .Build();
+
+        Provider = DynamoDbHost.Services;
+        await DynamoDbHost.RunAsync();
+    }
+
+    public static async Task RunAsync(
+        Action<DynamoDbConfigurator> configurator,
+        Action<IServiceCollection> servicesConfig)
+    {
+        DynamoDbHost = Host
+            .CreateDefaultBuilder()
+            .ConfigureServices(services =>
+            {
+                services.AddDynamoDb(configurator);
+                servicesConfig(services);
+            })
             .Build();
 
         Provider = DynamoDbHost.Services;

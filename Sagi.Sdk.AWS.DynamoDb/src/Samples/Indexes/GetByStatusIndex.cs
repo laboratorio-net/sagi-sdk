@@ -11,8 +11,8 @@ namespace Sagi.Sdk.AWS.DynamoDb.Indexes
         {
             IndexName = INDEX_NAME;
             KeySchema = [
-                new("Status", KeyType.HASH),
-                new("CreatedAt", KeyType.RANGE),
+                new(nameof(Order.Status), KeyType.HASH),
+                new(nameof(Order.CreatedAt), KeyType.RANGE),
             ];
 
             Projection = new()
