@@ -18,14 +18,15 @@ await DynamoDbHosting
         x.ConfigureTable(new SecondTable());
     }, sv => sv.AddHostedService<OrderService>());
 
-Console.CancelKeyPress += (obj, args) 
+Console.CancelKeyPress += (obj, args)
     => DynamoDbHosting.StopAsync().Wait();
 
-public record Order(
-    Guid Id,
-    Guid SortKey,
-    DateTime CreatedAt,
-    string Status);
+public class Order
+{
+    public Guid Id { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public string? Status { get; set; }
+}
 
 public class OrderService(IDynamoDBContext context) : BackgroundService
 {
@@ -33,6 +34,8 @@ public class OrderService(IDynamoDBContext context) : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        await Task.Delay(5000, stoppingToken);
+
         var counter = 0;
         var statusList = new string[] { "Pending", "Processing", "Done" };
         var config = new DynamoDBOperationConfig
@@ -43,12 +46,12 @@ public class OrderService(IDynamoDBContext context) : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             var status = statusList[Random.Shared.Next(0, statusList.Length - 1)];
-            var order = new Order(
-                Guid.NewGuid(),
-                Guid.NewGuid(),
-                DateTime.Now,
-                status
-            );
+            var order = new Order
+            {
+                Id = Guid.NewGuid(),
+                CreatedAt = DateTime.Now,
+                Status = status
+            };
 
             await _context.SaveAsync(order, config, stoppingToken);
 

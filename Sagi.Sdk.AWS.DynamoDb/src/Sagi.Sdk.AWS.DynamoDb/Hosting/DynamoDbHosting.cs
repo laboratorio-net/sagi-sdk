@@ -45,7 +45,6 @@ public class DynamoDbHosting
         await Task.Run(async () =>
        {
            await Task.Delay(5000);
-           Console.WriteLine("Stopping host...");
            await DynamoDbHost!.StopAsync();
            DynamoDbHost!.Dispose();
        });
