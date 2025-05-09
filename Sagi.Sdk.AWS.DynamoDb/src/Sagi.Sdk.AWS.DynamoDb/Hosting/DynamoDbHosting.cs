@@ -13,31 +13,32 @@ public class DynamoDbHosting
 
     public static async Task RunAsync(Action<DynamoDbConfigurator> configurator)
     {
-        DynamoDbHost = Host
-            .CreateDefaultBuilder()
-            .ConfigureServices(services =>
-                services.AddDynamoDb(configurator))
-            .Build();
-
-        Provider = DynamoDbHost.Services;
-        await DynamoDbHost.RunAsync();
+        CreateHost(configurator);
+        await DynamoDbHost!.RunAsync();
     }
 
     public static async Task RunAsync(
         Action<DynamoDbConfigurator> configurator,
         Action<IServiceCollection> servicesConfig)
     {
+        CreateHost(configurator, servicesConfig);
+        await DynamoDbHost!.RunAsync();
+    }
+
+    private static void CreateHost(
+        Action<DynamoDbConfigurator> configurator,
+        Action<IServiceCollection>? servicesConfig = null)
+    {
         DynamoDbHost = Host
             .CreateDefaultBuilder()
             .ConfigureServices(services =>
             {
                 services.AddDynamoDb(configurator);
-                servicesConfig(services);
+                servicesConfig?.Invoke(services);
             })
             .Build();
 
         Provider = DynamoDbHost.Services;
-        await DynamoDbHost.RunAsync();
     }
 
     public static async Task StopAsync()

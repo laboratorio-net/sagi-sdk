@@ -44,10 +44,6 @@ public class Order
 public class OrderService(IDynamoDbContext<Order> context) : BackgroundService
 {
     private readonly IDynamoDbContext<Order> _context = context;
-    private readonly DynamoDBOperationConfig _config = new()
-    {
-        OverrideTableName = FirstTable.TABLE_NAME
-    };
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
