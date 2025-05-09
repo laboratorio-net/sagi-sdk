@@ -36,6 +36,9 @@ public class TablesInitializer : IDynamoDbTableInitializer
         {
             await _dynamoDb.CreateTableAsync(request);
         }
+
+        var args = DynamoDbTableEventsArgs.Create(request.TableName);
+        OnReadyTable(args);
     }
 
     private async Task<bool> TableExistAsync(string tableName)
@@ -44,4 +47,25 @@ public class TablesInitializer : IDynamoDbTableInitializer
         var existTable = tables.TableNames.Contains(tableName);
         return existTable;
     }
+
+    private void OnReadyTable(DynamoDbTableEventsArgs e) =>
+        TableIsReady?.Invoke(this, e);
+
+    public static event DynamoDbTableEventHandler? TableIsReady;
 }
+
+
+public class DynamoDbTableEventsArgs : EventArgs
+{
+    public required string TableName { get; set; }
+    public DateTime TimeStamp { get; set; }
+
+    public static DynamoDbTableEventsArgs Create(string tableName) => new()
+    {
+        TableName = tableName,
+        TimeStamp = DateTime.UtcNow,
+    };
+}
+
+public delegate Task DynamoDbTableEventHandler(
+    object sender, DynamoDbTableEventsArgs e);
