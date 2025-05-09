@@ -2,7 +2,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Sagi.Sdk.AWS.DynamoDb.Context;
 using Sagi.Sdk.AWS.DynamoDb.Hosting;
 
 using Samples.Tables;
@@ -25,7 +25,7 @@ public class Order
 {
     public Guid Id { get; set; }
     public DateTime CreatedAt { get; set; }
-    public string? Status { get; set; }    
+    public string? Status { get; set; }
 
     private static string SortStatus()
     {
@@ -41,9 +41,9 @@ public class Order
     };
 }
 
-public class OrderService(IDynamoDBContext context) : BackgroundService
+public class OrderService(IDynamoDbContext<Order> context) : BackgroundService
 {
-    private readonly IDynamoDBContext _context = context;
+    private readonly IDynamoDbContext<Order> _context = context;
     private readonly DynamoDBOperationConfig _config = new()
     {
         OverrideTableName = FirstTable.TABLE_NAME
@@ -51,7 +51,6 @@ public class OrderService(IDynamoDBContext context) : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-
         var counter = 0;
         var delayInSeconds = 5;
 
@@ -59,7 +58,7 @@ public class OrderService(IDynamoDBContext context) : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            await _context.SaveAsync(Order.Create(), _config, stoppingToken);
+            await _context.SaveAsync(Order.Create(), FirstTable.TABLE_NAME, stoppingToken);
 
             counter++;
             Console.WriteLine("{0} | [{1}] - Record saved", DateTime.Now, counter);

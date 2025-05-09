@@ -71,5 +71,3 @@ public class DynamoDbContext<TModel> : IDynamoDbContext<TModel> where TModel : c
     private static DynamoDBOperationConfig CreateConfig(string tableName) =>
         new() { OverrideTableName = tableName };
 }
-
-

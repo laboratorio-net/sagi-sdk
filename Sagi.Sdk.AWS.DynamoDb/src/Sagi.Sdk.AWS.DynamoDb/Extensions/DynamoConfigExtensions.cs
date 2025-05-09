@@ -4,6 +4,7 @@ using Amazon.DynamoDBv2.DataModel;
 using Microsoft.Extensions.DependencyInjection;
 
 using Sagi.Sdk.AWS.DynamoDb.Config;
+using Sagi.Sdk.AWS.DynamoDb.Context;
 using Sagi.Sdk.AWS.DynamoDb.Initializers;
 
 namespace Sagi.Sdk.AWS.DynamoDb.Extensions;
@@ -33,7 +34,8 @@ public static class DynamoConfigExtensions
         services.AddSingleton(configurator);
         services.AddSingleton<IAmazonDynamoDB>(client);
         services.AddSingleton<IDynamoDBContext>(new DynamoDBContext(client));
-        
+        services.AddSingleton(typeof(IDynamoDbContext<>), typeof(DynamoDbContext<>));
+
         if (configurator.InitializeDb)
         {
             services.AddSingleton<IDynamoDbTableInitializer>(x =>
