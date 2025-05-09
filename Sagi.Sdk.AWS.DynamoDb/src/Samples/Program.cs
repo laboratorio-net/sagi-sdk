@@ -25,39 +25,45 @@ public class Order
 {
     public Guid Id { get; set; }
     public DateTime CreatedAt { get; set; }
-    public string? Status { get; set; }
+    public string? Status { get; set; }    
+
+    private static string SortStatus()
+    {
+        var statusList = new string[] { "Pending", "Processing", "Done" };
+        return statusList[Random.Shared.Next(0, statusList.Length - 1)];
+    }
+
+    public static Order Create() => new()
+    {
+        Id = Guid.NewGuid(),
+        CreatedAt = DateTime.UtcNow,
+        Status = SortStatus(),
+    };
 }
 
 public class OrderService(IDynamoDBContext context) : BackgroundService
 {
     private readonly IDynamoDBContext _context = context;
+    private readonly DynamoDBOperationConfig _config = new()
+    {
+        OverrideTableName = FirstTable.TABLE_NAME
+    };
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await Task.Delay(5000, stoppingToken);
 
         var counter = 0;
-        var statusList = new string[] { "Pending", "Processing", "Done" };
-        var config = new DynamoDBOperationConfig
-        {
-            OverrideTableName = FirstTable.TABLE_NAME
-        };
+        var delayInSeconds = 5;
+
+        await Task.Delay(TimeSpan.FromSeconds(delayInSeconds), stoppingToken);
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            var status = statusList[Random.Shared.Next(0, statusList.Length - 1)];
-            var order = new Order
-            {
-                Id = Guid.NewGuid(),
-                CreatedAt = DateTime.Now,
-                Status = status
-            };
-
-            await _context.SaveAsync(order, config, stoppingToken);
+            await _context.SaveAsync(Order.Create(), _config, stoppingToken);
 
             counter++;
             Console.WriteLine("{0} | [{1}] - Record saved", DateTime.Now, counter);
-            await Task.Delay(5000, stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(delayInSeconds), stoppingToken);
         }
     }
 }
