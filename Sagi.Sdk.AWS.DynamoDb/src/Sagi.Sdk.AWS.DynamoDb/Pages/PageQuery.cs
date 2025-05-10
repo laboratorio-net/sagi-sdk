@@ -15,5 +15,3 @@ public class PageQuery
     public static Error InvalidPageSize => new($"INVALID_PAGE_SIZE",
         $"The PageSize field must have a value between {MIN_PAGE_SIZE} and {MAX_PAGE_SIZE}.");
 }
-
-
