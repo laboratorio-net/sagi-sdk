@@ -3,12 +3,14 @@ using Amazon.DynamoDBv2.Model;
 
 using Sagi.Sdk.AWS.DynamoDb.Indexes;
 
+using Samples.Entities;
+
 namespace Samples.Tables;
 
-public class FirstTable : CreateTableRequest
+public class OrderTable : CreateTableRequest
 {
-    public const string TABLE_NAME = "Sample.First.Table";
-    public FirstTable()
+    public const string TABLE_NAME = "Sample.Orders";
+    public OrderTable()
     {
         TableName = TABLE_NAME;
         AttributeDefinitions =

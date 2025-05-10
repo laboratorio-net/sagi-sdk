@@ -1,6 +1,8 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 
+using Samples.Entities;
+
 namespace Sagi.Sdk.AWS.DynamoDb.Indexes
 {
     public class GetByStatusIndex : GlobalSecondaryIndex
