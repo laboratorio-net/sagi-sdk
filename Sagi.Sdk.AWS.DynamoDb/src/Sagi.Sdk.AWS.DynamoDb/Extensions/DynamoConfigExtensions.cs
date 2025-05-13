@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 
@@ -9,6 +11,7 @@ using Sagi.Sdk.AWS.DynamoDb.Initializers;
 
 namespace Sagi.Sdk.AWS.DynamoDb.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class DynamoConfigExtensions
 {
     public static IServiceCollection AddDynamoDb(this IServiceCollection services,
