@@ -4,6 +4,7 @@ using Amazon.DynamoDBv2.Model;
 using NSubstitute;
 
 using Sagi.Sdk.AWS.DynamoDb.Initializers;
+using Sagi.Sdk.AWS.DynamoDb.Tests.Fixtures;
 
 namespace Sagi.Sdk.AWS.DynamoDb.Tests.Initializers;
 
@@ -56,10 +57,9 @@ public class TablesInitializerTests
         await _dynamoDb.DidNotReceive().CreateTableAsync(Arg.Any<CreateTableRequest>());
     }
 
-    [Fact]
-    public async Task ShouldEmitEvent_WhenTableIsReady()
+    [Theory, AutoNSubstituteData]
+    public async Task ShouldEmitEvent_WhenTableIsReady(CreateTableRequest request)
     {
-        var request = new CreateTableRequest();
         _dynamoDb.ListTablesAsync()
             .Returns(new ListTablesResponse());
 
