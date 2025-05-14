@@ -63,8 +63,11 @@ public class TablesInitializerTests
             .Returns(new ListTablesResponse());
 
         bool eventEmitted = false;
-        TablesInitializer.TableIsReady += async (sender, args)
-            => await Task.Run(() => eventEmitted = true);
+        TablesInitializer.TableIsReady += (sender, args) =>
+        {
+            eventEmitted = true;
+            return Task.CompletedTask;
+        };
 
         _sut.AddTable([request]);
         await _sut.ConfigureAsync();
