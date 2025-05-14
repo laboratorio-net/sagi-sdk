@@ -1,6 +1,6 @@
 using Sagi.Sdk.AWS.DynamoDb.Pages;
 
-namespace Sagi.Sdk.AWS.DynamoDb.Tests.Pages;
+namespace Sagi.Sdk.AWS.DynamoDb.Tests.UnitTests.Pages;
 
 public class PageResultTests
 {

@@ -2,11 +2,10 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 
 using NSubstitute;
-
 using Sagi.Sdk.AWS.DynamoDb.Initializers;
 using Sagi.Sdk.AWS.DynamoDb.Tests.Fixtures;
 
-namespace Sagi.Sdk.AWS.DynamoDb.Tests.Initializers;
+namespace Sagi.Sdk.AWS.DynamoDb.Tests.UnitTests.Initializers;
 
 public class TablesInitializerTests
 {

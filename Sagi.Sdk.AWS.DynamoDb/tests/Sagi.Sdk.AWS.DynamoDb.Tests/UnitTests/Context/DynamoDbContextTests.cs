@@ -9,7 +9,7 @@ using Sagi.Sdk.AWS.DynamoDb.Pages;
 using Sagi.Sdk.AWS.DynamoDb.Tests.Fixtures;
 using Sagi.Sdk.AWS.DynamoDb.Tests.Fixtures.Fakes;
 
-namespace Sagi.Sdk.AWS.DynamoDb.Tests.Context;
+namespace Sagi.Sdk.AWS.DynamoDb.Tests.UnitTests.Context;
 
 public class DynamoDbContextTests
 {

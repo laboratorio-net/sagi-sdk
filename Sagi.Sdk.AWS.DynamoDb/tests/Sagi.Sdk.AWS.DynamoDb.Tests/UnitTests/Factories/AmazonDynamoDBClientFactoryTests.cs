@@ -3,7 +3,7 @@ using Sagi.Sdk.AWS.DynamoDb.Config;
 using Sagi.Sdk.AWS.DynamoDb.Factories;
 using Sagi.Sdk.AWS.DynamoDb.Tests.Fixtures;
 
-namespace Sagi.Sdk.AWS.DynamoDb.Tests.Factories;
+namespace Sagi.Sdk.AWS.DynamoDb.Tests.UnitTests.Factories;
 
 public class AmazonDynamoDBClientFactoryTests
 {

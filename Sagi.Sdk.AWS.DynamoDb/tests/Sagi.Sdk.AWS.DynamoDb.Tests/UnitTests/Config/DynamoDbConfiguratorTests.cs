@@ -3,7 +3,7 @@ using AutoFixture.Idioms;
 using Sagi.Sdk.AWS.DynamoDb.Config;
 using Sagi.Sdk.AWS.DynamoDb.Tests.Fixtures;
 
-namespace Sagi.Sdk.AWS.DynamoDb.Tests.Config;
+namespace Sagi.Sdk.AWS.DynamoDb.Tests.UnitTests.Config;
 
 public class DynamoDbConfiguratorTests
 {

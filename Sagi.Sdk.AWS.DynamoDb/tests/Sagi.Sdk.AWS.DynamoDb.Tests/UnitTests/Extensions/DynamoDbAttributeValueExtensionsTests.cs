@@ -1,10 +1,9 @@
 using System.Text.Json;
 
 using Amazon.DynamoDBv2.Model;
-
 using Sagi.Sdk.AWS.DynamoDb.Extensions;
 
-namespace Sagi.Sdk.AWS.DynamoDb.Tests.Extensions;
+namespace Sagi.Sdk.AWS.DynamoDb.Tests.UnitTests.Extensions;
 
 public class DynamoDbAttributeValueExtensionsTests
 {
