@@ -27,6 +27,7 @@ public class AutoNSubstituteDataAttribute : AutoDataAttribute
             .OfType<ThrowingRecursionBehavior>()
             .ToList()
             .ForEach(b => fixture.Behaviors.Remove(b));
+            
         fixture.Behaviors.Add(new OmitOnRecursionBehavior(1));
         fixture.RepeatCount = 1;
 
