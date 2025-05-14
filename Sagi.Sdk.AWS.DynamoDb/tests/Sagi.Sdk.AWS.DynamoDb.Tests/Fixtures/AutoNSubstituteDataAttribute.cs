@@ -81,6 +81,7 @@ public class AutoNSubstituteDataAttribute : AutoDataAttribute
                 Accesskey = Faker.Internet.UserName(),
                 SecretKey = Faker.Internet.Password(),
                 ServiceURL = Faker.Internet.Url(),
+                SessionToken = Faker.Random.Guid().ToString(),
                 InitializeDb = false,
             });
         }

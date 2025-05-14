@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 
@@ -7,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Sagi.Sdk.AWS.DynamoDb.Config;
 using Sagi.Sdk.AWS.DynamoDb.Context;
+using Sagi.Sdk.AWS.DynamoDb.Factories;
 using Sagi.Sdk.AWS.DynamoDb.Initializers;
 
 namespace Sagi.Sdk.AWS.DynamoDb.Extensions;
@@ -19,19 +18,7 @@ public static class DynamoConfigExtensions
         var configurator = new DynamoDbConfigurator();
         action(configurator);
 
-        var dbConfig = new AmazonDynamoDBConfig
-        {
-            ServiceURL = configurator.ServiceURL,
-            MaxErrorRetry = 10,
-            ThrottleRetries = false
-        };
-
-        var client = new AmazonDynamoDBClient(
-            configurator.Accesskey,
-            configurator.SecretKey,
-            // options.SessionToken,
-            dbConfig
-        );
+        var client = AmazonDynamoDBClientFactory.Create(configurator);
 
         services.AddSingleton(configurator);
         services.AddSingleton<IAmazonDynamoDB>(client);
@@ -55,13 +42,7 @@ public static class DynamoConfigExtensions
 
     public static IServiceCollection AddDynamoDb(this IServiceCollection services)
     {
-        var config = new AmazonDynamoDBConfig
-        {
-            MaxErrorRetry = 10,
-            ThrottleRetries = false
-        };
-
-        var client = new AmazonDynamoDBClient(config);
+        var client = AmazonDynamoDBClientFactory.Create();
         services.AddSingleton(client);
 
         services.AddAWSService<IAmazonDynamoDB>(new DynamoDbConfigurator());
