@@ -20,6 +20,7 @@ public class AutoNSubstituteDataAttribute : AutoDataAttribute
         var fixture = new Fixture()
             .Customize(new AutoNSubstituteCustomization { ConfigureMembers = true })
             .Customize(new DynamoModelCustomization(Faker))
+            .Customize(new ConfiguratorsCustomizations(Faker))
            ;
 
         fixture.Behaviors
@@ -81,7 +82,7 @@ public class AutoNSubstituteDataAttribute : AutoDataAttribute
                 SecretKey = Faker.Internet.Password(),
                 ServiceURL = Faker.Internet.Url(),
                 InitializeDb = false,
-            });            
+            });
         }
     }
 }

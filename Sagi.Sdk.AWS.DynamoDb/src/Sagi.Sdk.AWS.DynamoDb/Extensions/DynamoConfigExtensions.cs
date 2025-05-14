@@ -11,7 +11,6 @@ using Sagi.Sdk.AWS.DynamoDb.Initializers;
 
 namespace Sagi.Sdk.AWS.DynamoDb.Extensions;
 
-[ExcludeFromCodeCoverage]
 public static class DynamoConfigExtensions
 {
     public static IServiceCollection AddDynamoDb(this IServiceCollection services,
