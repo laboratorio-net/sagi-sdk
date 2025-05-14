@@ -1,7 +1,8 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+
 using Microsoft.Extensions.DependencyInjection;
-using NSubstitute;
+
 using Sagi.Sdk.AWS.DynamoDb.Config;
 using Sagi.Sdk.AWS.DynamoDb.Context;
 using Sagi.Sdk.AWS.DynamoDb.Extensions;
@@ -17,9 +18,9 @@ public class DynamoConfigExtensionsTests
         DynamoDbConfigurator configurator)
     {
         var services = new ServiceCollection();
-        var configuratorMock = Substitute.For<Action<DynamoDbConfigurator>>();
+        void ConfiguratorMock(DynamoDbConfigurator x) => x = configurator; ;
 
-        services.AddDynamoDb(configuratorMock);
+        services.AddDynamoDb(ConfiguratorMock);
 
         var provider = services.BuildServiceProvider();
 
