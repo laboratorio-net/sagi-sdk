@@ -36,9 +36,8 @@ public class DynamoDbContextTests :
 
         // while (wait)
         // {
+        //     Thread.Sleep(100);
         // }
-
-        // Thread.Sleep(100);
 
         // await _sut.SaveAsync(model, InsertTestTable.TABLE_NAME, _cancellationToken);
         // var filter = new QueryFilter();
