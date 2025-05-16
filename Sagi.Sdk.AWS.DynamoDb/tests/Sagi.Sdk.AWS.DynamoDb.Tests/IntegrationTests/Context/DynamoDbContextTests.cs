@@ -27,27 +27,15 @@ public class DynamoDbContextTests :
     [Theory, AutoNSubstituteData]
     public async Task SaveAsync_ShouldInsertRecordInDynamoDb(FakeModel model)
     {
-        // var wait = true;
-        // TablesInitializer.TableIsReady += (sender, args) =>
-        // {
-        //     wait = args.TableName != InsertTestTable.TABLE_NAME;
-        //     return Task.CompletedTask;
-        // };
+        await _sut.SaveAsync(model, InsertTestTable.TABLE_NAME, _cancellationToken);
+        var filter = new QueryFilter();
+        filter.AddCondition(nameof(FakeModel.Id), QueryOperator.Equal, model.Id);
+        filter.AddCondition(nameof(FakeModel.CreatedAt), QueryOperator.Equal, model.CreatedAt);
 
-        // while (wait)
-        // {
-        //     Thread.Sleep(100);
-        // }
+        var result = await _sut.GetSingleAsync(filter, InsertTestTable.TABLE_NAME, _cancellationToken);
 
-        // await _sut.SaveAsync(model, InsertTestTable.TABLE_NAME, _cancellationToken);
-        // var filter = new QueryFilter();
-        // filter.AddCondition(nameof(FakeModel.Id), QueryOperator.Equal, model.Id);
-        // filter.AddCondition(nameof(FakeModel.CreatedAt), QueryOperator.Equal, model.CreatedAt);
-
-        // var result = await _sut.GetSingleAsync(filter, InsertTestTable.TABLE_NAME, _cancellationToken);
-
-        // Assert.NotNull(result);
-        // Assert.IsType<FakeModel>(result);
+        Assert.NotNull(result);
+        Assert.IsType<FakeModel>(result);
         // Assert.Equivalent(model, result);
     }
 }
