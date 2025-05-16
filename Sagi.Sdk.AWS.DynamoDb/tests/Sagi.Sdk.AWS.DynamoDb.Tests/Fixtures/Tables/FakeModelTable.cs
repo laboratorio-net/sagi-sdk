@@ -4,13 +4,11 @@ using Sagi.Sdk.AWS.DynamoDb.Tests.Fixtures.Fakes;
 
 namespace Sagi.Sdk.AWS.DynamoDb.Tests.Fixtures.Tables;
 
-public class FakeModelTable : CreateTableRequest
+public abstract class FakeModelTable : CreateTableRequest
 {
-    public const string TABLE_NAME = "Tests.Fake.Model.Table";
-
     public FakeModelTable()
     {
-        TableName = TABLE_NAME;
+        TableName = GetTableName();
         AttributeDefinitions =
         [
             new (nameof(FakeModel.Id), ScalarAttributeType.S),
@@ -24,4 +22,12 @@ public class FakeModelTable : CreateTableRequest
         BillingMode = BillingMode.PAY_PER_REQUEST;
         GlobalSecondaryIndexes = [];
     }
+
+    protected abstract string GetTableName();
+}
+
+internal class InsertTestTable : FakeModelTable
+{
+    public const string TABLE_NAME = "FakeModel.Insert.Tests";
+    protected override string GetTableName() => TABLE_NAME;
 }

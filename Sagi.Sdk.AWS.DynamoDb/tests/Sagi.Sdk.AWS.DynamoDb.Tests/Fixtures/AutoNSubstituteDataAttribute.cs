@@ -21,13 +21,14 @@ public class AutoNSubstituteDataAttribute : AutoDataAttribute
             .Customize(new AutoNSubstituteCustomization { ConfigureMembers = true })
             .Customize(new DynamoModelCustomization(Faker))
             .Customize(new ConfiguratorsCustomizations(Faker))
+            .Customize(new ModelCustomization(Faker))
            ;
 
         fixture.Behaviors
             .OfType<ThrowingRecursionBehavior>()
             .ToList()
             .ForEach(b => fixture.Behaviors.Remove(b));
-            
+
         fixture.Behaviors.Add(new OmitOnRecursionBehavior(1));
         fixture.RepeatCount = 1;
 
@@ -84,6 +85,19 @@ public class AutoNSubstituteDataAttribute : AutoDataAttribute
                 ServiceURL = Faker.Internet.Url(),
                 SessionToken = Faker.Random.Guid().ToString(),
                 InitializeDb = false,
+            });
+        }
+    }
+
+    internal class ModelCustomization(Faker faker) : Customization(faker)
+    {
+        public override void Customize(IFixture fixture)
+        {
+            fixture.Register<FakeModel>(() => new()
+            {
+                Id = Faker.Random.Guid().ToString(),
+                Name = Faker.Lorem.Word(),
+                CreatedAt = Faker.Date.Recent()
             });
         }
     }
