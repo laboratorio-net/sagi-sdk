@@ -17,6 +17,7 @@ public class IntegrationTestsFixture
             x.ServiceURL = "http://localhost:8000";
             x.InitializeDb = true;
             x.ConfigureTable(new InsertTestTable());
+            x.ConfigureTable(new GetSingleTestTable());
         });
 
         ServiceProvider = services.BuildServiceProvider();

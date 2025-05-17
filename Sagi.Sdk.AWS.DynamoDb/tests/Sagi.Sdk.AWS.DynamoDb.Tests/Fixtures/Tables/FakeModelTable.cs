@@ -12,12 +12,10 @@ public abstract class FakeModelTable : CreateTableRequest
         AttributeDefinitions =
         [
             new (nameof(FakeModel.Id), ScalarAttributeType.S),
-            new(nameof(FakeModel.CreatedAt), ScalarAttributeType.S),
         ];
         KeySchema =
         [
             new (nameof(FakeModel.Id), KeyType.HASH),
-            new (nameof(FakeModel.CreatedAt), KeyType.RANGE),
         ];
         BillingMode = BillingMode.PAY_PER_REQUEST;
         GlobalSecondaryIndexes = [];
@@ -29,5 +27,11 @@ public abstract class FakeModelTable : CreateTableRequest
 internal class InsertTestTable : FakeModelTable
 {
     public const string TABLE_NAME = "FakeModel.Insert.Tests";
+    protected override string GetTableName() => TABLE_NAME;
+}
+
+internal class GetSingleTestTable : FakeModelTable
+{
+    public const string TABLE_NAME = "FakeModel.GetSingle.Tests";
     protected override string GetTableName() => TABLE_NAME;
 }
