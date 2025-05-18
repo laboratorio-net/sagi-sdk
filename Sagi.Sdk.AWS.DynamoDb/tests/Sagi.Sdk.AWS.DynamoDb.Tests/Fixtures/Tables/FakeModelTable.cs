@@ -24,14 +24,27 @@ public abstract class FakeModelTable : CreateTableRequest
     protected abstract string GetTableName();
 }
 
+internal class GetSingleTestTable : FakeModelTable
+{
+    public const string TABLE_NAME = "FakeModel.GetSingle.Tests";
+    protected override string GetTableName() => TABLE_NAME;
+}
+
+internal class GetAllTestTable : FakeModelTable
+{
+    public const string TABLE_NAME = "FakeModel.GetAll.Tests";
+    protected override string GetTableName() => TABLE_NAME;
+}
+
 internal class InsertTestTable : FakeModelTable
 {
     public const string TABLE_NAME = "FakeModel.Insert.Tests";
     protected override string GetTableName() => TABLE_NAME;
 }
 
-internal class GetSingleTestTable : FakeModelTable
+
+internal class DeleteTestTable : FakeModelTable
 {
-    public const string TABLE_NAME = "FakeModel.GetSingle.Tests";
+    public const string TABLE_NAME = "FakeModel.Delete.Tests";
     protected override string GetTableName() => TABLE_NAME;
 }

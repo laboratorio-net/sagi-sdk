@@ -16,8 +16,10 @@ public class IntegrationTestsFixture
             x.SecretKey = "secret";
             x.ServiceURL = "http://localhost:8000";
             x.InitializeDb = true;
-            x.ConfigureTable(new InsertTestTable());
             x.ConfigureTable(new GetSingleTestTable());
+            x.ConfigureTable(new GetAllTestTable());
+            x.ConfigureTable(new InsertTestTable());
+            x.ConfigureTable(new DeleteTestTable());
         });
 
         ServiceProvider = services.BuildServiceProvider();

@@ -2,8 +2,11 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
+
 using AutoFixture.Idioms;
+
 using NSubstitute;
+
 using Sagi.Sdk.AWS.DynamoDb.Context;
 using Sagi.Sdk.AWS.DynamoDb.Pages;
 using Sagi.Sdk.AWS.DynamoDb.Tests.Fixtures;
@@ -13,7 +16,7 @@ namespace Sagi.Sdk.AWS.DynamoDb.Tests.UnitTests.Context;
 
 public class DynamoDbContextTests
 {
-     private readonly IDynamoDBContext _context;
+    private readonly IDynamoDBContext _context;
     private readonly IAmazonDynamoDB _client;
     private readonly DynamoDbContext<FakeModel> _sut;
 
@@ -80,7 +83,11 @@ public class DynamoDbContextTests
     public async Task DeleteAsync_SholdCAll_DeleteItemAsync(
         DeleteItemRequest request, CancellationToken cancellationToken)
     {
-        await _sut.DeleteAsync(request, cancellationToken);
-        await _client.Received().DeleteItemAsync(request, cancellationToken);
+        var conditions = request.Key;
+
+        await _sut.DeleteAsync(request.Key, FakeModel.TABLE_NAME, cancellationToken);
+
+        await _client.Received().DeleteItemAsync(Arg.Is<DeleteItemRequest>(
+            x => x.Key.Equals(conditions)), cancellationToken);
     }
 }

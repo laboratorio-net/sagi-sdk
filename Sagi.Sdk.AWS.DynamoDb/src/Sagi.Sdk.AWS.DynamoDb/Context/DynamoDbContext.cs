@@ -2,6 +2,7 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
+
 using Sagi.Sdk.AWS.DynamoDb.Extensions;
 using Sagi.Sdk.AWS.DynamoDb.Pages;
 
@@ -18,14 +19,28 @@ public class DynamoDbContext<TModel> : IDynamoDbContext<TModel> where TModel : c
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
         _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
+    }    
 
-    public Task DeleteAsync(DeleteItemRequest request, CancellationToken cancellationToken)
+    public async Task<TModel?> GetSingleAsync(
+        QueryFilter filter, string tableName,
+        CancellationToken cancellationToken)
     {
-        return _client.DeleteItemAsync(request, cancellationToken);
+        var query = new QueryOperationConfig
+        {
+            Filter = filter,
+            Limit = 1,
+            Select = SelectValues.AllAttributes,
+        };
+
+        var search = _context.FromQueryAsync<TModel>(query, CreateConfig(tableName));
+
+        var result = await search.GetNextSetAsync(cancellationToken);
+        return result.FirstOrDefault();
     }
 
-    public async Task<PageResult<TModel>> GetAll(PageQuery query, string tableName, CancellationToken cancellationToken)
+    public async Task<PageResult<TModel>> GetAll(
+        PageQuery query, string tableName,
+        CancellationToken cancellationToken)
     {
         var request = new ScanRequest
         {
@@ -48,24 +63,24 @@ public class DynamoDbContext<TModel> : IDynamoDbContext<TModel> where TModel : c
         };
     }
 
-    public async Task<TModel?> GetSingleAsync(QueryFilter filter, string tableName, CancellationToken cancellationToken)
-    {
-        var query = new QueryOperationConfig
-        {
-            Filter = filter,
-            Limit = 1,
-            Select = SelectValues.AllAttributes,
-        };
-
-        var search = _context.FromQueryAsync<TModel>(query, CreateConfig(tableName));
-
-        var result = await search.GetNextSetAsync(cancellationToken);
-        return result.FirstOrDefault();
-    }
-
-    public Task SaveAsync(TModel model, string tableName, CancellationToken cancellationToken)
+    public Task SaveAsync(
+        TModel model, string tableName,
+        CancellationToken cancellationToken)
     {
         return _context.SaveAsync(model, CreateConfig(tableName), cancellationToken);
+    }    
+
+    public Task DeleteAsync(
+        Dictionary<string, AttributeValue> conditions,
+        string tableName, CancellationToken cancellationToken)
+    {
+        var request = new DeleteItemRequest
+        {
+            TableName = tableName,
+            Key = conditions,
+        };
+
+        return _client.DeleteItemAsync(request, cancellationToken);
     }
 
     private static DynamoDBOperationConfig CreateConfig(string tableName) =>
