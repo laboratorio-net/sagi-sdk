@@ -96,6 +96,6 @@ public abstract class Entity<T>
 
     public override int GetHashCode()
     {
-        return (GetType().GetHashCode() * 907) + Id.GetHashCode();
+        return (GetType().GetHashCode() * 907) + Id!.GetHashCode();
     }
 }
