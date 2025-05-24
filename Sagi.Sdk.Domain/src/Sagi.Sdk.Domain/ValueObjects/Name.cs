@@ -2,7 +2,7 @@ using Sagi.Sdk.Results;
 
 namespace Sagi.Sdk.Domain.ValueObjects;
 
-public class Name : ValueObject, IEquatable<Name>
+public class Name : ValueObject<Name>
 {
     public Name(params string[] names)
     {
@@ -38,25 +38,26 @@ public class Name : ValueObject, IEquatable<Name>
     {
         ClearErrors();
 
+        const string error_code = "INVALID_NAME";
         if (string.IsNullOrEmpty(FirstName))
         {
-            AddError(new Error("INVALID_NAME", "Firstname is required."));
+            AddError(new Error(error_code, "Firstname is required."));
         }
 
         if (string.IsNullOrEmpty(LastName))
         {
-            AddError(new Error("INVALID_NAME", "Last is required."));
+            AddError(new Error(error_code, "Last is required."));
         }
 
         if (FullName.Length < MinLength)
         {
-            AddError(new Error("INVALID_NAME",
+            AddError(new Error(error_code,
                 $"FullName must have at least {MinLength} characters."));
         }
 
         if (FullName.Length > MaxLength)
         {
-            AddError(new Error("INVALID_NAME",
+            AddError(new Error(error_code,
                 $"FullName must have maximum of {MaxLength} characters."));
         }
     }
@@ -77,7 +78,7 @@ public class Name : ValueObject, IEquatable<Name>
         return name.IsValid;
     }
 
-    public bool Equals(Name? other)
+    public override bool Equals(Name? other)
     {
         if (other is null) return false;
         if (ReferenceEquals(this, other)) return true;

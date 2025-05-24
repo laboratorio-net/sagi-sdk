@@ -1,22 +1,8 @@
-using Sagi.Sdk.Results.Contracts;
+using Sagi.Sdk.Domain.Contracts;
 
 namespace Sagi.Sdk.Domain.ValueObjects;
 
-public abstract class ValueObject
+public abstract class ValueObject<TChild> : Validateble, IEquatable<TChild>
 {
-    private readonly List<IError> _errors = [];
-
-    public IReadOnlyList<IError> Errors => [.. _errors.AsReadOnly()];
-    public bool IsInvalid => !IsValid;
-    public bool IsValid => _errors.Count == 0;
-
-    public abstract void Validate();
-
-    protected void AddError(IError error)
-    {
-        ArgumentNullException.ThrowIfNull(error, nameof(error));
-        _errors.Add(error);
-    }
-
-    protected void ClearErrors() => _errors.Clear();
+    public abstract bool Equals(TChild? other);
 }
