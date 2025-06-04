@@ -86,7 +86,7 @@ public class Name : ValueObject<Name>
         return FullName.Equals(other.FullName, StringComparison.Ordinal);
     }
 
-    public override bool Equals(object obj) => Equals(obj as Name);
+    public override bool Equals(object? obj) => Equals(obj as Name);
 
     public override int GetHashCode()
     {

@@ -27,10 +27,12 @@ public class ZipCode : ValueObject<ZipCode>
         return Value == other?.Value;
     }
 
+    public override bool Equals(object? obj) => Equals(obj as ZipCode);
+
     public override void Validate()
     {
         ClearErrors();
-        const string error_code = "INVALID_PHONE";
+        const string error_code = "INVALID_ZIPCODE";
 
         if (!Value.All(char.IsDigit))
             AddError(new Error(error_code, "Zipcode must contain only digits."));

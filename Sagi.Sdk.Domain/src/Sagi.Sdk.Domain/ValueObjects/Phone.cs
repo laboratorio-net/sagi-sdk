@@ -84,7 +84,7 @@ public class Phone : ValueObject<Phone>, IEquatable<Phone>
         return DDI == other.DDI && DDD == other.DDD && Number == other.Number;
     }
 
-    public override bool Equals(object obj) => Equals(obj as Phone);
+    public override bool Equals(object? obj) => Equals(obj as Phone);
 
     public override int GetHashCode() => HashCode.Combine(DDI, DDD, Number);
 
