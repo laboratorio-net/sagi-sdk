@@ -50,7 +50,7 @@ public class EmailTests
     [Fact]
     public void HostAndUser_ShouldBeEmpty_WhenAdressHasNotSign()
     {
-        var sut = new Email("contatoemailcom");
+        var sut = new Email("contactemailcom");
         Assert.Equal(string.Empty, sut.Host);
         Assert.Equal(string.Empty, sut.User);
     }
@@ -68,7 +68,7 @@ public class EmailTests
     [Fact]
     public void DomainAndTopLevelDomain_ShouldBeEmpty_WhenHostHasNoDots()
     {
-        var sut = new Email("contato@emailcom");
+        var sut = new Email("contact@emailcom");
         Assert.Equal(string.Empty, sut.Domain);
         Assert.Equal(string.Empty, sut.TopLevelDomain);
     }
@@ -76,7 +76,7 @@ public class EmailTests
     [Fact]
     public void Email_Should_BeInvalid_WhenDomainAndTLDIsNotSeparatedWithDot()
     {
-        var sut = new Email("contato@emailcom");
+        var sut = new Email("contact@emailcom");
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -85,7 +85,7 @@ public class EmailTests
     [Fact]
     public void Email_Should_BeInvalid_WhenAddressHaveWhiteSpace()
     {
-        var sut = new Email("contato@ email.com");
+        var sut = new Email("contact@ email.com");
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -94,15 +94,15 @@ public class EmailTests
     [Fact]
     public void Email_Should_BeInvalid_WhenAddressDoesNotHaveAtSign()
     {
-        var sut = new Email("contatoemail.com");
+        var sut = new Email("contactemail.com");
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
     }
 
     [Theory]
-    [InlineData("contato@@email.com")]
-    [InlineData("contato@@@email.com")]
+    [InlineData("contact@@email.com")]
+    [InlineData("contact@@@email.com")]
     public void Email_Should_BeInvalid_WhenItHasTwoOrMoreSigns(string address)
     {
         var sut = new Email(address);
@@ -114,7 +114,7 @@ public class EmailTests
     [Fact]
     public void Email_Should_BeInvalid_WhenAddressDoesNotHaveDomain()
     {
-        var sut = new Email("contato@.com");
+        var sut = new Email("contact@.com");
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -123,7 +123,7 @@ public class EmailTests
     [Fact]
     public void Email_Should_BeInvalid_WhenAddressDoesNotHaveTopLevelDomain()
     {
-        var sut = new Email("contato@company");
+        var sut = new Email("contact@company");
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -132,7 +132,7 @@ public class EmailTests
     [Fact]
     public void Email_ShouldBeInvalid_WhenHostIsIncomplete()
     {
-        var sut = new Email("contato@.com");
+        var sut = new Email("contact@.com");
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -150,15 +150,15 @@ public class EmailTests
     [Fact]
     public void Email_ShouldBeInvalid_WhenWithoutHost()
     {
-        var sut = new Email("contato@");
+        var sut = new Email("contact@");
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
     }
 
     [Theory]
-    [InlineData("contato@email..com")]
-    [InlineData("contato@sub..domain.com")]
+    [InlineData("contact@email..com")]
+    [InlineData("contact@sub..domain.com")]
     public void Email_ShouldBeInvalid_WhenThereAreTwoDotsTogether(string address)
     {
         var sut = new Email(address);
@@ -168,7 +168,7 @@ public class EmailTests
     }
 
     [Theory]
-    [InlineData("contato@éxemplo.com")]
+    [InlineData("contact@éxemplo.com")]
     [InlineData("contâto@éxemplo.com")]
     [InlineData("contãto@éxemplo.com")]
     [InlineData("contto@exemplo.çom")]
@@ -180,7 +180,7 @@ public class EmailTests
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
-    }    
+    }
 
     [Fact]
     public void Email_ShouldBeInvalid_WhenAddressHasOverThanDefaultAllowedCharacteres()
@@ -201,5 +201,97 @@ public class EmailTests
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
+    }
+
+    [Fact]
+    public void TryParse_ShouldReturnFalseAndNotParse_WhenValueIsInvalid()
+    {
+        var parsed = Email.TryParse("", out var email);
+        Assert.False(parsed);
+        Assert.True(email.Errors.Count > 0);
+    }
+
+    [Fact]
+    public void TryParse_ShouldReturnTrueAndParse_WhenValueIsValid()
+    {
+        var expected = "contact@email.com";
+        var parsed = Email.TryParse(expected, out var email);
+
+        Assert.True(parsed);
+        Assert.NotNull(email);
+        Assert.Equal(expected, email.Address);
+    }
+
+    [Fact]
+    public void ImplicitOperator_ShouldParse_StringToEmail()
+    {
+        var email = "contact@email.com";
+        Email sut = email;
+
+        Assert.Equal(email, sut.Address);
+        Assert.True(sut.IsValid);
+    }
+
+    [Fact]
+    public void ToString_ShouldReturn_EmailAddress()
+    {
+        var email = "contact@email.com";
+        Email sut = email;
+
+        Assert.Equal(email, sut.ToString());
+    }
+
+    [Fact]
+    public void GetHashCode_ShouldBeEqual_ForEqualEmails()
+    {
+        var sut = new Email("contact@email.com");
+        var other = new Email("contact@email.com");
+
+        Assert.Equal(sut.GetHashCode(), other.GetHashCode());
+    }
+
+    [Fact]
+    public void GetHashCode_ShouldBeDifferent_ForDifferentEmails()
+    {
+        var sut = new Email("contact@email.com");
+        var other = new Email("other@email.com");
+
+        Assert.NotEqual(sut.GetHashCode(), other.GetHashCode());
+    }
+
+    [Fact]
+    public void Equals_ShouldReturnFalse_WhenOtherIsNull()
+    {
+        var sut = new Email("contact@email.com");
+        Email other = null;
+
+        Assert.False(sut.Equals(other));
+    }
+
+    [Fact]
+    public void Equals_ShouldReturnTrue_WhenReferences_AreTheSame()
+    {
+        var sut = new Email("contact@email.com");
+        Email other = sut;
+
+        Assert.True(sut.Equals(other));
+    }
+
+    [Fact]
+    public void Equals_ShouldReturnTrue_WhenValuesAreEquals()
+    {
+        var sut = new Email("contact@email.com");
+        var other = new Email("contact@email.com");
+
+        Assert.True(sut.Equals(other));
+    }
+
+    [Fact]
+    public void EqualsObject_ShouldEvaluateEquality()
+    {
+        var sut = new Email("contact@email.com");
+        var other = new Email("contact@email.com");
+
+        Assert.True(sut.Equals((object)other));
     }
 }

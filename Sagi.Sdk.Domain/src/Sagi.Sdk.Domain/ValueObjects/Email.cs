@@ -6,7 +6,6 @@ namespace Sagi.Sdk.Domain.ValueObjects;
 
 public class Email : ValueObject<Email>
 {
-
     public Email(string address) : this(address, 256) { }
 
     public Email(string address, int maxLength)
@@ -76,7 +75,7 @@ public class Email : ValueObject<Email>
 
     public string TopLevelDomain { get; }
 
-    public int MaxLength { get; }    
+    public int MaxLength { get; }
 
     public override void Validate()
     {
@@ -126,17 +125,18 @@ public class Email : ValueObject<Email>
 
     public override bool Equals(Email? other)
     {
-        throw new NotImplementedException();
+        if (other is null) return false;
+        if (ReferenceEquals(this, other)) return true;
+
+        return Address == other.Address;
     }
 
-    public override bool Equals(object? obj)
-    {
-        throw new NotImplementedException();
-    }
+    public override bool Equals(object? obj) =>
+        Equals(obj as Email);
 
     public override int GetHashCode()
     {
-        throw new NotImplementedException();
+        return (GetType().GetHashCode() * 907) + Address.GetHashCode();
     }
 
     public override string ToString() => Address;
