@@ -11,9 +11,9 @@ public sealed class Country : ValueObject<Country>
         IsoCode = isoCode?.Trim().ToUpperInvariant();
     }
 
-    public string Name { get; }
-    public string Abbreviation { get; }
-    public string IsoCode { get; }
+    public string? Name { get; }
+    public string? Abbreviation { get; }
+    public string? IsoCode { get; }
 
     public override void Validate()
     {
@@ -27,12 +27,14 @@ public sealed class Country : ValueObject<Country>
 
         if (string.IsNullOrWhiteSpace(Abbreviation) || Abbreviation.Length != 2)
         {
-            AddError(new Error(errorCode, "Country abbreviation must be exactly 2 characters."));
+            AddError(new Error(errorCode,
+                "Country abbreviation must be exactly 2 characters."));
         }
 
         if (string.IsNullOrWhiteSpace(IsoCode) || IsoCode.Length != 3)
         {
-            AddError(new Error(errorCode, "Country ISO code must be exactly 3 characters."));
+            AddError(new Error(errorCode,
+                "Country ISO code must be exactly 3 characters."));
         }
     }
 
@@ -55,16 +57,26 @@ public sealed class Country : ValueObject<Country>
 
     public override string ToString() => $"{Name} ({Abbreviation}/{IsoCode})";
 
-    public static bool TryParse(string name, string abbreviation, string isoCode, out Country country)
+    public static bool TryParse(
+        string name,
+        string abbreviation,
+        string isoCode,
+        out Country country)
     {
         country = new Country(name, abbreviation, isoCode);
         country.Validate();
         return country.IsValid;
     }
 
-    public static implicit operator Country((string Name, string Abbreviation, string IsoCode) tuple)
+    public static implicit operator Country(
+        (string Name, string Abbreviation, string IsoCode) tuple)
     {
-        _ = TryParse(tuple.Name, tuple.Abbreviation, tuple.IsoCode, out var country);
+        _ = TryParse(
+            tuple.Name,
+            tuple.Abbreviation,
+            tuple.IsoCode,
+            out var country);
+            
         return country;
     }
 }
