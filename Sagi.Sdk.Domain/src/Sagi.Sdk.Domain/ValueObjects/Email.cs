@@ -4,7 +4,7 @@ using Sagi.Sdk.Results;
 
 namespace Sagi.Sdk.Domain.ValueObjects;
 
-public class Email : ValueObject<Email>
+public sealed class Email : ValueObject<Email>
 {
     public Email(string address) : this(address, 256) { }
 

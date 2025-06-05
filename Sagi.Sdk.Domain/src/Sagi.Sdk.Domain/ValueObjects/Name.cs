@@ -2,7 +2,7 @@ using Sagi.Sdk.Results;
 
 namespace Sagi.Sdk.Domain.ValueObjects;
 
-public class Name : ValueObject<Name>
+public sealed class Name : ValueObject<Name>
 {
     public Name(params string[] names)
     {

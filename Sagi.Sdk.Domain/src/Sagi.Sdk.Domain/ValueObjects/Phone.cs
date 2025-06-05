@@ -3,7 +3,7 @@ using Sagi.Sdk.Results;
 
 namespace Sagi.Sdk.Domain.ValueObjects;
 
-public class Phone : ValueObject<Phone>, IEquatable<Phone>
+public sealed class Phone : ValueObject<Phone>, IEquatable<Phone>
 {
     public static readonly short NumberMaxLength = 9;
     public static readonly short DDDLength = 2;

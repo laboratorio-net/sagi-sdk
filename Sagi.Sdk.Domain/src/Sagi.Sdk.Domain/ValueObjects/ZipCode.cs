@@ -2,7 +2,7 @@ using Sagi.Sdk.Results;
 
 namespace Sagi.Sdk.Domain.ValueObjects;
 
-public class ZipCode : ValueObject<ZipCode>
+public sealed class ZipCode : ValueObject<ZipCode>
 {
     public static readonly short RequiredLength = 8;
 
