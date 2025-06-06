@@ -10,7 +10,6 @@ public class CityTests
     public CityTests()
     {
         _validState = new State("Rio Grande do Norte", "RN", _validCountry);
-        _validState.Validate();
     }
 
     [Fact]
@@ -49,10 +48,7 @@ public class CityTests
     public void City_ShouldBeInvalid_WhenStateIsInvalid()
     {
         var invalidCountry = new Country("", "B", "B");
-        invalidCountry.Validate();
-
         var invalidState = new State("", "R", invalidCountry);
-        invalidState.Validate();
 
         var sut = new City("Natal", invalidState);
         sut.Validate();

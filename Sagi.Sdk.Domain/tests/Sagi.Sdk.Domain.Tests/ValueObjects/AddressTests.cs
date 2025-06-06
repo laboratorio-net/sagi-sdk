@@ -79,10 +79,7 @@ public class AddressTests
     public void Address_ShouldBeInvalid_WhenNeighborhoodIsInvalid()
     {
         var invalidCity = new City("", _state);
-        invalidCity.Validate();
-
         var invalidNeighborhood = new Neighborhood("", invalidCity);
-        invalidNeighborhood.Validate();
 
         var sut = new Address("Rua das Flores", "123", null, invalidNeighborhood, _zipCode);
         sut.Validate();
@@ -94,7 +91,6 @@ public class AddressTests
     public void Address_ShouldBeInvalid_WhenZipCodeIsInvalid()
     {
         var invalidZipCode = new ZipCode("");
-        invalidZipCode.Validate();
 
         var sut = new Address("Rua das Flores", "123", null, _neighborhood, invalidZipCode);
         sut.Validate();

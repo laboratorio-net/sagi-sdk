@@ -11,10 +11,7 @@ public class NeighborhoodTests
     public NeighborhoodTests()
     {
         _validState = new State("Rio Grande do Norte", "RN", _validCountry);
-        _validState.Validate();
-
         _validCity = new City("Natal", _validState);
-        _validCity.Validate();
     }
 
     [Fact]
@@ -53,13 +50,8 @@ public class NeighborhoodTests
     public void Neighborhood_ShouldBeInvalid_WhenCityIsInvalid()
     {
         var invalidCountry = new Country("", "B", "B");
-        invalidCountry.Validate();
-
         var invalidState = new State("", "R", invalidCountry);
-        invalidState.Validate();
-
         var invalidCity = new City("", invalidState);
-        invalidCity.Validate();
 
         var sut = new Neighborhood("Lagoa Nova", invalidCity);
         sut.Validate();

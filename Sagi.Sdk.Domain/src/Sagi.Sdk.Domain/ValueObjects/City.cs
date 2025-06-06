@@ -20,20 +20,8 @@ public sealed class City : ValueObject<City>
 
         if (string.IsNullOrWhiteSpace(Name))
             AddError(new Error(errorCode, "City name is required."));
-
-        if (State is null)
-        {
-            AddError(new Error(errorCode, "A valid state must be provided."));
-        }
-        else
-        {
-            State.Validate();
-            if (State.IsInvalid)
-            {
-                var stateError = $"{errorCode}_STATE";
-                AddErrors(State.Errors.Select(e => new Error(stateError, e.Message)));
-            }
-        }
+            
+        Validate(State, errorCode, "A valid state must be provided.");
     }
 
     public override bool Equals(City? other)

@@ -77,40 +77,8 @@ public sealed class Address : ValueObject<Address>
             $"Number must be between {NumberMinLength} and {NumberMaxLength} characters."));
         }
 
-        ValidateNeighborhood(errorCode);
-        ValidateZipCode(errorCode);
-    }
-
-    private void ValidateNeighborhood(string errorCode)
-    {
-        if (Neighborhood is null)
-            AddError(new Error(errorCode, "A valid neighborhood must be provided."));
-        else
-        {
-            Neighborhood.Validate();
-            if (Neighborhood.IsInvalid)
-            {
-                var neighborhoodErrorCode = $"{errorCode}_NEIGHBORHOOD";
-                AddErrors(Neighborhood.Errors.Select(e =>
-                    new Error(neighborhoodErrorCode, e.Message)));
-            }
-        }
-    }
-
-    private void ValidateZipCode(string errorCode)
-    {
-        if (ZipCode is null)
-            AddError(new Error(errorCode, "A valid ZIP code must be provided."));
-        else
-        {
-            ZipCode.Validate();
-            if (ZipCode.IsInvalid)
-            {
-                var zipCodeErrorCode = $"{errorCode}_ZIPCODE";
-                AddErrors(ZipCode.Errors.Select(e =>
-                    new Error(zipCodeErrorCode, e.Message)));
-            }
-        }
+        Validate(Neighborhood, errorCode, "A valid neighborhood must be provided.");
+        Validate(ZipCode, errorCode, "A valid ZIP code must be provided.");
     }
 
     public override bool Equals(Address? other)

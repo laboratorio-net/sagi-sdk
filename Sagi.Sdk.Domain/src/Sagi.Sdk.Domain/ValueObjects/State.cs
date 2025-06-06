@@ -26,24 +26,8 @@ public sealed class State : ValueObject<State>
         if (string.IsNullOrWhiteSpace(Abbreviation) || Abbreviation.Length != 2)
             AddError(new Error(errorCode,
             "State abbreviation must be exactly 2 characters."));
-
-        if (Country is null || Country.IsInvalid)
-            AddError(new Error(errorCode, "A valid country must be provided."));
-
-        if (Country is null)
-        {
-            AddError(new Error(errorCode, "A valid country must be provided."));
-        }
-        else
-        {
-            Country.Validate();
-            if (Country.IsInvalid)
-            {
-                var countryErrorCode = $"{errorCode}_COUNTRY";
-                AddErrors(Country.Errors.Select(e =>
-                    new Error(countryErrorCode, e.Message)));
-            }
-        }
+       
+        Validate(Country, errorCode, "A valid country must be provided.");
     }
 
     public override bool Equals(State? other)

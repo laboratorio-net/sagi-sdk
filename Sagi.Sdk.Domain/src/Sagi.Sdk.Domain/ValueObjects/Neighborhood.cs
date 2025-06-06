@@ -22,17 +22,7 @@ public sealed class Neighborhood : ValueObject<Neighborhood>
         if (string.IsNullOrWhiteSpace(Name))
             AddError(new Error(errorCode, "Neighborhood name is required."));
 
-        if (City is null)
-            AddError(new Error(errorCode, "A valid city must be provided."));
-        else
-        {
-            City.Validate();
-            if (City.IsInvalid)
-            {
-                var stateError = $"{errorCode}_CITY";
-                AddErrors(City.Errors.Select(e => new Error(stateError, e.Message)));
-            }
-        }
+        Validate(City, errorCode, "A valid city must be provided.");
     }
 
     public override bool Equals(Neighborhood? other)

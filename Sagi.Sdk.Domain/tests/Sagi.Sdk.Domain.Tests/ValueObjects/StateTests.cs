@@ -57,7 +57,6 @@ public class StateTests
     public void State_ShouldBeInvalid_WhenCountryIsInvalid()
     {
         var invalidCountry = new Country("", "B", "B");
-        invalidCountry.Validate();
         var sut = new State("Rio Grande do Norte", "RN", invalidCountry);
         sut.Validate();
 
