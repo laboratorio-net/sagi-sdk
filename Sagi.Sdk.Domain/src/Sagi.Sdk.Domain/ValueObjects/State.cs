@@ -29,6 +29,21 @@ public sealed class State : ValueObject<State>
 
         if (Country is null || Country.IsInvalid)
             AddError(new Error(errorCode, "A valid country must be provided."));
+
+        if (Country is null)
+        {
+            AddError(new Error(errorCode, "A valid country must be provided."));
+        }
+        else
+        {
+            Country.Validate();
+            if (Country.IsInvalid)
+            {
+                var countryErrorCode = $"{errorCode}_COUNTRY";
+                AddErrors(Country.Errors.Select(e =>
+                    new Error(countryErrorCode, e.Message)));
+            }
+        }
     }
 
     public override bool Equals(State? other)

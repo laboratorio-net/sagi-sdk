@@ -8,7 +8,6 @@ public sealed class ZipCode : ValueObject<ZipCode>
 
     public ZipCode(string value)
     {
-        ArgumentException.ThrowIfNullOrEmpty(value);
         Value = value;
         Validate();
     }

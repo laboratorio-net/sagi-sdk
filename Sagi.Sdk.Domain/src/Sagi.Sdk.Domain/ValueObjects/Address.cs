@@ -10,9 +10,17 @@ public sealed class Address : ValueObject<Address>
         string complement,
         Neighborhood neighborhood,
         ZipCode zipCode)
-        : this(street, number, complement, neighborhood, zipCode, StreetMinLength, StreetMaxLength, NumberMinLength, NumberMaxLength)
-    {
-    }
+        : this(
+              street,
+              number,
+              complement,
+              neighborhood,
+              zipCode,
+              streetMinLength: 2,
+              streetMaxLength: 80,
+              numberMinLength: 1,
+              numberMaxLength: 10)
+    { }
 
     public Address(
         string street,
@@ -31,44 +39,78 @@ public sealed class Address : ValueObject<Address>
         Neighborhood = neighborhood;
         ZipCode = zipCode;
 
-        StreetMin = streetMinLength;
-        StreetMax = streetMaxLength;
-        NumberMin = numberMinLength;
-        NumberMax = numberMaxLength;
+        StreetMinLength = streetMinLength;
+        StreetMaxLength = streetMaxLength;
+        NumberMinLength = numberMinLength;
+        NumberMaxLength = numberMaxLength;
     }
 
-    public string Street { get; }
-    public string Number { get; }
-    public string Complement { get; }
+    public string? Street { get; }
+    public string? Number { get; }
+    public string? Complement { get; }
     public Neighborhood Neighborhood { get; }
     public ZipCode ZipCode { get; }
 
-    public short StreetMin { get; }
-    public short StreetMax { get; }
-    public short NumberMin { get; }
-    public short NumberMax { get; }
-
-    public static short StreetMinLength => 2;
-    public static short StreetMaxLength => 80;
-    public static short NumberMinLength => 1;
-    public static short NumberMaxLength => 10;
+    public short StreetMinLength { get; }
+    public short StreetMaxLength { get; }
+    public short NumberMinLength { get; }
+    public short NumberMaxLength { get; }
 
     public override void Validate()
     {
         ClearErrors();
         const string errorCode = "INVALID_ADDRESS";
 
-        if (string.IsNullOrWhiteSpace(Street) || Street.Length < StreetMin || Street.Length > StreetMax)
-            AddError(new Error(errorCode, $"Street must be between {StreetMin} and {StreetMax} characters."));
+        if (string.IsNullOrWhiteSpace(Street) ||
+            Street.Length < StreetMinLength ||
+            Street.Length > StreetMaxLength)
+        {
+            AddError(new Error(errorCode,
+            $"Street must be between {StreetMinLength} and {StreetMinLength} characters."));
+        }
 
-        if (string.IsNullOrWhiteSpace(Number) || Number.Length < NumberMin || Number.Length > NumberMax)
-            AddError(new Error(errorCode, $"Number must be between {NumberMin} and {NumberMax} characters."));
+        if (string.IsNullOrWhiteSpace(Number) ||
+            Number.Length < NumberMinLength ||
+            Number.Length > NumberMaxLength)
+        {
+            AddError(new Error(errorCode,
+            $"Number must be between {NumberMinLength} and {NumberMaxLength} characters."));
+        }
 
-        if (Neighborhood is null || Neighborhood.IsInvalid)
+        ValidateNeighborhood(errorCode);
+        ValidateZipCode(errorCode);
+    }
+
+    private void ValidateNeighborhood(string errorCode)
+    {
+        if (Neighborhood is null)
             AddError(new Error(errorCode, "A valid neighborhood must be provided."));
+        else
+        {
+            Neighborhood.Validate();
+            if (Neighborhood.IsInvalid)
+            {
+                var neighborhoodErrorCode = $"{errorCode}_NEIGHBORHOOD";
+                AddErrors(Neighborhood.Errors.Select(e =>
+                    new Error(neighborhoodErrorCode, e.Message)));
+            }
+        }
+    }
 
-        if (ZipCode is null || ZipCode.IsInvalid)
+    private void ValidateZipCode(string errorCode)
+    {
+        if (ZipCode is null)
             AddError(new Error(errorCode, "A valid ZIP code must be provided."));
+        else
+        {
+            ZipCode.Validate();
+            if (ZipCode.IsInvalid)
+            {
+                var zipCodeErrorCode = $"{errorCode}_ZIPCODE";
+                AddErrors(ZipCode.Errors.Select(e =>
+                    new Error(zipCodeErrorCode, e.Message)));
+            }
+        }
     }
 
     public override bool Equals(Address? other)
@@ -90,8 +132,8 @@ public sealed class Address : ValueObject<Address>
         return HashCode.Combine(Street, Number, Complement, Neighborhood, ZipCode);
     }
 
-    public override string ToString()
-    {
-        return $"{Street}, {Number} - {Neighborhood.Name}, {Neighborhood.City.Name} - {Neighborhood.City.State.Abbreviation}/{Neighborhood.City.State.Country.Abbreviation} - ZIP: {ZipCode}";
-    }
+    public override string ToString() =>
+        $"{Street}, {Number} - {Neighborhood.Name}, {Neighborhood.City.Name} " +
+        $"- {Neighborhood.City.State.Abbreviation}/" +
+        $"{Neighborhood.City.State.Country.Abbreviation} - ZIP: {ZipCode}";
 }

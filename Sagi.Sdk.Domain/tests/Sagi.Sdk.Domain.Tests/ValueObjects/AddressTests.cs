@@ -13,16 +13,9 @@ public class AddressTests
     public AddressTests()
     {
         _state = new State("Rio Grande do Norte", "RN", _country);
-        _state.Validate();
-
         _city = new City("Natal", _state);
-        _city.Validate();
-
         _neighborhood = new Neighborhood("Tirol", _city);
-        _neighborhood.Validate();
-
         _zipCode = new ZipCode("59020010");
-        _zipCode.Validate();
     }
 
     [Fact]
@@ -54,7 +47,7 @@ public class AddressTests
     [Fact]
     public void Address_ShouldBeInvalid_WhenStreetIsTooLong()
     {
-        var street = new string('a', Address.StreetMaxLength + 1);
+        var street = new string('a', 81);
         var sut = new Address(street, "123", null, _neighborhood, _zipCode);
         sut.Validate();
 
@@ -75,7 +68,7 @@ public class AddressTests
     [Fact]
     public void Address_ShouldBeInvalid_WhenNumberIsTooLong()
     {
-        var number = new string('9', Address.NumberMaxLength + 1);
+        var number = new string('9', 11);
         var sut = new Address("Rua das Flores", number, null, _neighborhood, _zipCode);
         sut.Validate();
 

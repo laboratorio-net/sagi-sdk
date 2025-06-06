@@ -11,12 +11,6 @@ public class ZipCodeTests
     }
 
     [Fact]
-    public void ZipCode_ShouldThrowArgumentNullException_WhenValueIsEmpty()
-    {
-        Assert.Throws<ArgumentException>(() => new ZipCode(""));
-    }
-
-    [Fact]
     public void ZipCode_ShouldBeInvalid_WhenContainsCharacters()
     {
         var sut = new ZipCode("59157A08");
