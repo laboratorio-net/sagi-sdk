@@ -13,7 +13,7 @@ public class DynamoDbDockerContainer : IDisposable
     {
         Container ??= new Builder()
             .UseContainer()
-            .UseImage("amazon/dynamodb-local")
+            .UseImage("amazon/dynamodb-local:2.6.1")
             .ExposePort(8000, 8000)
             .Command("-jar DynamoDBLocal.jar -sharedDb -inMemory")
             .WithEnvironment("AWS_ACCESS_KEY_ID", "root")

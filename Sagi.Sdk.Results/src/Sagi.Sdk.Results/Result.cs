@@ -6,8 +6,7 @@ public class Result<T> : IResult<T>
 {
     public T? Value { get; }
 
-    public bool IsSuccess => 
-        Errors == null || Errors.Any() == false;
+    public bool IsSuccess => Errors == null || Errors.Any() == false;
 
     public bool IsFailure => !IsSuccess;
 

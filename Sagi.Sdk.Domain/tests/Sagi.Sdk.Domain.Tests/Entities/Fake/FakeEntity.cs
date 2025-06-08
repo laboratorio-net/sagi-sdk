@@ -28,9 +28,14 @@ public class FakeEntity : Entity<Guid>
         return other;
     }
 
-    public void Apply(FakeEvent @event)
+    public void Load(FakeEvent @event)
     {
         Subject = @event.Subject;
         Message = @event.Message;
+    }
+
+    public override void Validate()
+    {
+        throw new NotImplementedException();
     }
 }

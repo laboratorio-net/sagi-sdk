@@ -3,7 +3,7 @@ using Sagi.Sdk.Results.Contracts;
 
 namespace Sagi.Sdk.Domain.Entities;
 
-public abstract class Entity<T>
+public abstract class Entity<T> : Validateble
 {
     private readonly List<IError> _errors = [];
     private readonly List<Event<T>> _events = [];
@@ -25,29 +25,10 @@ public abstract class Entity<T>
 
     public long Version { get; protected set; }
 
-    public IReadOnlyList<IError> Errors => [.. _errors.AsReadOnly()];
 
     public IReadOnlyList<Event<T>> Events => [.. _events.AsReadOnly()];
 
     protected abstract T GenerateId();
-
-    protected void AddError(IError error)
-    {
-        ArgumentNullException.ThrowIfNull(error, nameof(error));
-        _errors.Add(error);
-    }
-
-    protected void AddErrors(IEnumerable<IError> errors)
-    {
-        ArgumentNullException.ThrowIfNull(errors, nameof(errors));
-        _errors.AddRange(errors);
-    }
-
-    public bool HasNoError() => !HasError();
-
-    public bool HasError() => _errors.Count > 0;
-
-    public bool HasError(IError error) => _errors.Contains(error);
 
     protected void UpVersion() => Version += 1;
 
@@ -55,7 +36,7 @@ public abstract class Entity<T>
 
     protected void LoadEvent(Event<T> @event)
     {
-        ((dynamic)this).Apply((dynamic)@event);
+        ((dynamic)this).Load((dynamic)@event);
         Version = @event.AggregateVersion;
     }
 
@@ -96,6 +77,6 @@ public abstract class Entity<T>
 
     public override int GetHashCode()
     {
-        return (GetType().GetHashCode() * 907) + Id.GetHashCode();
+        return (GetType().GetHashCode() * 907) + Id!.GetHashCode();
     }
 }

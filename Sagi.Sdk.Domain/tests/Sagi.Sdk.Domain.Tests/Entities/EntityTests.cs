@@ -1,6 +1,4 @@
 using Sagi.Sdk.Domain.Tests.Entities.Fake;
-using Sagi.Sdk.Results;
-using Sagi.Sdk.Results.Contracts;
 
 namespace Sagi.Sdk.Domain.Tests.Entities;
 
@@ -14,49 +12,7 @@ public class EntityTest
         Assert.NotEqual(Guid.Empty, entity.Id);
         Assert.True(entity.Active);
         Assert.Equal(DateTimeOffset.UtcNow.Date, entity.CreateAt.Date);
-        Assert.Empty(entity.Errors);
         Assert.Empty(entity.Events);
-    }
-
-    [Fact]
-    public void ShouldAddErrorToList()
-    {
-        var error = new Error("FAKE_ERROR", "Fake error message");
-        var entity = new FakeEntity();
-
-        entity.AddFakeError(error);
-
-        Assert.Single(entity.Errors);
-        Assert.Contains(error, entity.Errors);
-    }
-
-    [Fact]
-    public void ShouldAddMultipleErrorsToList()
-    {
-        var errors = new List<IError>
-        {
-            new Error ("FAKE_ERROR_1", "Fake error message"),
-            new Error ("FAKE_ERROR_2", "Fake error message"),
-        };
-
-        var entity = new FakeEntity();
-
-        entity.AddFakeErrors(errors);
-
-        Assert.Equal(2, entity.Errors.Count);
-        Assert.Contains(errors[0], entity.Errors);
-        Assert.Contains(errors[1], entity.Errors);
-    }
-
-    [Fact]
-    public void ShouldReturnTrueIfErrorsExist()
-    {
-        var error = new Error("FAKE_ERROR", "Fake error message");
-        var entity = new FakeEntity();
-
-        entity.AddFakeError(error);
-
-        Assert.True(entity.HasError());
     }
 
     [Fact]
@@ -71,7 +27,7 @@ public class EntityTest
         Assert.Equal(@event.Message, entity.Message);
         Assert.Equal(@event.AggregateVersion, entity.Version);
     }
-    
+
     [Fact]
     public void ShouldAddEvent()
     {
@@ -79,8 +35,8 @@ public class EntityTest
         var @event = new FakeEvent();
 
         entity.AddFakeEvent(@event);
-        
-        Assert.Single(entity.Events); 
+
+        Assert.Single(entity.Events);
         Assert.Contains(@event, entity.Events);
     }
 
@@ -116,5 +72,75 @@ public class EntityTest
         var hashCode2 = entity.GetHashCode();
 
         Assert.Equal(hashCode1, hashCode2);
+    }
+
+    [Fact]
+    public void ShouldReturnTrueForEqualEntitiesUsingEqualityOperator()
+    {
+        var entity1 = new FakeEntity();
+        var entity2 = entity1;
+
+        Assert.True(entity1 == entity2);
+    }
+
+    [Fact]
+    public void ShouldReturnFalseForDifferentEntitiesUsingEqualityOperator()
+    {
+        var entity1 = new FakeEntity();
+        var entity2 = new FakeEntity();
+
+        Assert.False(entity1 == entity2);
+    }
+
+    [Fact]
+    public void ShouldReturnFalseForNullAndEntityUsingEqualityOperator()
+    {
+        var entity = new FakeEntity();
+
+        Assert.False(entity == null);
+    }
+
+    [Fact]
+    public void ShouldReturnTrueForNullEntitiesUsingEqualityOperator()
+    {
+        FakeEntity? entity1 = null;
+        FakeEntity? entity2 = null;
+
+        Assert.True(entity1 == entity2);
+    }
+
+    [Fact]
+    public void ShouldReturnTrueForDifferentEntitiesUsingInequalityOperator()
+    {
+        var entity1 = new FakeEntity();
+        var entity2 = new FakeEntity();
+
+        Assert.True(entity1 != entity2);
+    }
+
+    [Fact]
+    public void ShouldReturnFalseForEqualEntitiesUsingInequalityOperator()
+    {
+        var entity1 = new FakeEntity();
+        var entity2 = entity1;
+
+        Assert.False(entity1 != entity2);
+    }
+
+    [Fact]
+    public void ShouldReturnTrueForNullAndEntityUsingInequalityOperator()
+    {
+        var entity = new FakeEntity();
+
+        Assert.True(entity != null);
+    }
+
+    [Fact]
+    public void ShouldReturnFalseForNullEntitiesUsingInequalityOperator()
+    {
+        FakeEntity? entity1 = null;
+        FakeEntity? entity2 = null;
+
+        Assert.False(entity1 != entity2);
     }
 }

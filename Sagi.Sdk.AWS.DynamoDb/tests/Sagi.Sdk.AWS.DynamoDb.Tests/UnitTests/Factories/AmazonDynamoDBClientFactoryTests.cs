@@ -10,7 +10,10 @@ public class AmazonDynamoDBClientFactoryTests
     [Fact]
     public void Create_ShouldReturnAmazonDynamoDBClient()
     {
-        var client = AmazonDynamoDBClientFactory.Create();
+        var client = AmazonDynamoDBClientFactory.Create(new DynamoDbConfigurator
+        {
+            ServiceURL = "http://localhost:8000",
+        });        
 
         Assert.NotNull(client);
         Assert.IsType<AmazonDynamoDBClient>(client);
