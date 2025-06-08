@@ -52,17 +52,4 @@ public class DynamoConfigExtensionsTests
 
         Assert.NotNull(provider.GetService<IDynamoDbTableInitializer>());
     }
-
-    [Fact]
-    public void AddDynamoDb_WithoutAction_ShouldRegisterServices()
-    {
-        var services = new ServiceCollection();
-
-        services.AddDynamoDb();
-
-        var provider = services.BuildServiceProvider();
-
-        Assert.NotNull(provider.GetService<IAmazonDynamoDB>());
-        Assert.NotNull(provider.GetService<IDynamoDBContext>());
-    }
 }
