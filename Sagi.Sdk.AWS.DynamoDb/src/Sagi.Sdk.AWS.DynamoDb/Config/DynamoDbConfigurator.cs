@@ -1,3 +1,4 @@
+using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Amazon.Extensions.NETCore.Setup;
@@ -7,6 +8,11 @@ namespace Sagi.Sdk.AWS.DynamoDb.Config;
 public class DynamoDbConfigurator : AWSOptions
 {
     private readonly List<CreateTableRequest> _tables = [];
+
+    public DynamoDbConfigurator()
+    {
+        Region = RegionEndpoint.USEast1;        
+    }
 
     public BillingMode BillingMode { get; set; } = BillingMode.PAY_PER_REQUEST;
     public string? Accesskey { get; set; }

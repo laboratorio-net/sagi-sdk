@@ -1,3 +1,4 @@
+using Amazon;
 using Amazon.DynamoDBv2;
 using Sagi.Sdk.AWS.DynamoDb.Config;
 
@@ -23,7 +24,7 @@ public static class AmazonDynamoDBClientFactory
         {
             ServiceURL = configurator.ServiceURL,
             MaxErrorRetry = 10,
-            ThrottleRetries = false
+            ThrottleRetries = false,
         };
 
         AmazonDynamoDBClient client;
@@ -38,6 +39,7 @@ public static class AmazonDynamoDBClientFactory
         }
         else
         {
+            dbConfig.RegionEndpoint = configurator.Region;
             client = new AmazonDynamoDBClient(
                 configurator.Accesskey,
                 configurator.SecretKey,
@@ -49,3 +51,4 @@ public static class AmazonDynamoDBClientFactory
         return client;
     }
 }
+//An exception of type 'Amazon.Runtime.AmazonClientException' occurred in System.Private.CoreLib.dll but was not handled in user code: 'No RegionEndpoint or ServiceURL configured'
