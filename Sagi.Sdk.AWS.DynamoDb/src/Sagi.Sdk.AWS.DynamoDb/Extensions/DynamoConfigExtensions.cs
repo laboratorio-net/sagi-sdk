@@ -18,35 +18,30 @@ public static class DynamoConfigExtensions
         var configurator = new DynamoDbConfigurator();
         action(configurator);
 
-        var client = AmazonDynamoDBClientFactory.Create(configurator);
+        if (configurator.UseAWSService)
+        {
+            services.AddAWSService<IAmazonDynamoDB>(configurator);
+        }
+        else
+        {
+            var client = AmazonDynamoDBClientFactory.Create(configurator);
+            services.AddSingleton<IAmazonDynamoDB>(client);
+            services.AddSingleton<IDynamoDBContext>(new DynamoDBContext(client));
+        }
 
-        services.AddSingleton(configurator);
-        services.AddSingleton<IAmazonDynamoDB>(client);
-        services.AddSingleton<IDynamoDBContext>(new DynamoDBContext(client));
         services.AddSingleton(typeof(IDynamoDbContext<>), typeof(DynamoDbContext<>));
 
         if (configurator.InitializeDb)
         {
             services.AddSingleton<IDynamoDbTableInitializer>(x =>
             {
-                var initializer = new TablesInitializer(client);
+                var initializer = new TablesInitializer(x.GetService<IAmazonDynamoDB>()!);
                 initializer.AddTable([.. configurator.Tables]);
                 return initializer;
             });
 
             services.AddHostedService<DatabaseContextInitializer>();
         }
-
-        return services;
-    }
-
-    public static IServiceCollection AddDynamoDb(this IServiceCollection services)
-    {
-        var client = AmazonDynamoDBClientFactory.Create();
-        services.AddSingleton(client);
-
-        services.AddAWSService<IAmazonDynamoDB>(new DynamoDbConfigurator());
-        services.AddSingleton<IDynamoDBContext>(new DynamoDBContext(client));
 
         return services;
     }

@@ -20,6 +20,12 @@ public class DynamoDbConfigurator : AWSOptions
     public string? SessionToken { get; set; }
     public string? ServiceURL { get; set; }
     public bool InitializeDb { get; set; }
+
+    internal bool UseAWSService =>
+        string.IsNullOrWhiteSpace(Accesskey) &&
+        string.IsNullOrWhiteSpace(SecretKey) &&
+        string.IsNullOrWhiteSpace(SessionToken);
+
     public IReadOnlyList<CreateTableRequest> Tables => _tables;
 
     public void ConfigureTable(CreateTableRequest table)

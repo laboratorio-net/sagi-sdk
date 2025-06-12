@@ -2,7 +2,7 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+
 using Sagi.Sdk.AWS.DynamoDb.Config;
 using Sagi.Sdk.AWS.DynamoDb.Context;
 using Sagi.Sdk.AWS.DynamoDb.Extensions;
@@ -21,6 +21,9 @@ public class DynamoConfigExtensionsTests
         var configuratorMock = new Action<DynamoDbConfigurator>(config =>
         {
             config.ServiceURL = configurator.ServiceURL;
+            config.Accesskey = "accesskey";
+            config.SecretKey = "secretkey";
+            config.SessionToken = "token";
         });
 
         var services = new ServiceCollection();
@@ -28,7 +31,6 @@ public class DynamoConfigExtensionsTests
 
         var provider = services.BuildServiceProvider();
 
-        Assert.NotNull(provider.GetService<DynamoDbConfigurator>());
         Assert.NotNull(provider.GetService<IAmazonDynamoDB>());
         Assert.NotNull(provider.GetService<IDynamoDBContext>());
         Assert.NotNull(provider.GetService(typeof(IDynamoDbContext<FakeModel>)));
