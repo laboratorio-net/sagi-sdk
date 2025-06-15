@@ -21,6 +21,12 @@ public static class DynamoConfigExtensions
         if (configurator.UseAWSService)
         {
             services.AddAWSService<IAmazonDynamoDB>(configurator);
+            services.AddSingleton<IDynamoDBContext>( provider =>
+            {
+                var client = provider.GetRequiredService<IAmazonDynamoDB>();
+                return new DynamoDBContext(client);
+            });
+            
         }
         else
         {
@@ -33,9 +39,9 @@ public static class DynamoConfigExtensions
 
         if (configurator.InitializeDb)
         {
-            services.AddSingleton<IDynamoDbTableInitializer>(x =>
+            services.AddSingleton<IDynamoDbTableInitializer>(provider =>
             {
-                var initializer = new TablesInitializer(x.GetService<IAmazonDynamoDB>()!);
+                var initializer = new TablesInitializer(provider.GetService<IAmazonDynamoDB>()!);
                 initializer.AddTable([.. configurator.Tables]);
                 return initializer;
             });
