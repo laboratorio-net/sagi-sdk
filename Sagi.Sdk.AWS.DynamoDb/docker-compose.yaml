@@ -20,3 +20,14 @@ services:
       DYNAMO_ENDPOINT: http://dynamodb:8000
       AWS_ACCESS_KEY_ID: root
       AWS_SECRET_ACCESS_KEY: secret
+
+  samples:
+    image: leandroalves86/sagi.sdk.aws.dynamodb.samples:001
+    container_name: dynamodb.samples
+    build:
+      context: ../
+      dockerfile: ./Sagi.Sdk.AWS.DynamoDb/src/Samples/Dockerfile
+    environment:
+      AWS__AccessKey: root
+      AWS__SecretKey: secret
+      AWS__ServiceUrl: http://dynamodb:8000
