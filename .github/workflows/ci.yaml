@@ -11,12 +11,12 @@ jobs:
     uses: laboratorio-net/actions/.github/workflows/git-version.yaml@v1
 
   build:
-    uses: laboratorio-net/actions/.github/workflows/build-net.yaml@v1
+    uses: laboratorio-net/actions/.github/workflows/build-dotnet.yaml@v1
     needs: Versioning
     with:
       solution-name: Sagi.Sdk.sln
       create-packages: true
-      package-version: ${{ needs.versioning.outputs.version }}
+      package-version: ${{needs.versioning.outputs.version}}
 
   tag:
     uses: laboratorio-net/actions/.github/workflows/create-tag.yaml@v1
