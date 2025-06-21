@@ -26,6 +26,6 @@ jobs:
 
   tag:
     uses: laboratorio-net/actions/.github/workflows/create-tag.yaml@v1
-    needs: [versioning, build]
+    needs: [versioning, build, deploy]
     with:
       version: ${{needs.versioning.outputs.version}}
