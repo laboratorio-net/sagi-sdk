@@ -20,7 +20,6 @@ Porque amo morar no Rio Grande do Norte e acho incríveis os nomes das praias, c
 
 O projeto Sagi é composto por vários SDKs independentes, cada um focado em uma funcionalidade específica:
 
-- **Sagi.Sdk.Abstractions** – Definições de contratos e interfaces genéricas.  
 - **Sagi.Sdk.Mongo** – Integração e abstração para o MongoDB.  
 - **Sagi.Sdk.SqlServer** – Implementação para uso com SQL Server.  
 - **Sagi.Sdk.Identity** – Gerenciamento de identidade e autenticação.  
