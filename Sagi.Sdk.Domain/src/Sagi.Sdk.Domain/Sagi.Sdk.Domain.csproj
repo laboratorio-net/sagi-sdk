@@ -1,13 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Sagi.Sdk.Results\src\Sagi.Sdk.Results\Sagi.Sdk.Results.csproj" />
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Sagi.Sdk.Results\src\Sagi.Sdk.Results\Sagi.Sdk.Results.csproj" />
+  </ItemGroup>
+
+ <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\"/>
+ </ItemGroup>
 
 </Project>
