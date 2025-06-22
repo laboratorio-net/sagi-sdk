@@ -6,7 +6,7 @@ on:
       - release/**
       - feature/**
       - main
-      
+
 jobs:
   versioning:
     uses: laboratorio-net/actions/.github/workflows/git-version.yaml@v1
@@ -18,8 +18,6 @@ jobs:
       solution-name: Sagi.Sdk.sln
       create-packages: true
       package-version: ${{needs.versioning.outputs.version}}
-      sonar-analyze: true
-      sonar-organization: laboratorio-net
     secrets:
       sonar-token: ${{ secrets.SONAR_TOKEN }}
 
