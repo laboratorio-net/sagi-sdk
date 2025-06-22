@@ -18,12 +18,15 @@ jobs:
       solution-name: Sagi.Sdk.sln
       create-packages: true
       package-version: ${{needs.versioning.outputs.version}}
+      run-analysis: false
     secrets:
       sonar-token: ${{ secrets.SONAR_TOKEN }}
 
   deploy:
     uses: laboratorio-net/actions/.github/workflows/nuget-deploy.yaml@v1
     needs: build
+    with:
+      prefix-allowed-branch: release
     secrets:
       nuget-api-key: ${{ secrets.NUGET_PACAKGES_KEY }}
 
