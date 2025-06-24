@@ -18,6 +18,8 @@
     <PackageReference Include="AutoFixture.Xunit2" Version="4.18.1" />
     <PackageReference Include="Bogus" Version="35.6.2" />
     <PackageReference Include="Ductus.FluentDocker" Version="2.10.59" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup Label="Project-Dependencies">

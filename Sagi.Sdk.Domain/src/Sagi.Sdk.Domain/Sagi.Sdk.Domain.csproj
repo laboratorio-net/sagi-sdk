@@ -8,11 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Sagi.Sdk.Results\src\Sagi.Sdk.Results\Sagi.Sdk.Results.csproj" />
+    <ProjectReference
+      Include="..\..\..\Sagi.Sdk.Results\src\Sagi.Sdk.Results\Sagi.Sdk.Results.csproj" />
   </ItemGroup>
 
- <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\"/>
- </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+  </ItemGroup>
 
 </Project>

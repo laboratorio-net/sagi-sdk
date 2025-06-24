@@ -18,7 +18,6 @@ jobs:
       solution-name: Sagi.Sdk.sln
       create-packages: true
       package-version: ${{needs.versioning.outputs.version}}
-      run-analysis: false
     secrets:
       sonar-token: ${{ secrets.SONAR_TOKEN }}
 
