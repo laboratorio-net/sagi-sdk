@@ -1,0 +1,40 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": ".NET Core Launch (Select Project)",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "Build Solution",
+        "program": "${workspaceFolder}/${input:projectPath}/bin/Debug/net8.0/${input:projectDll}",
+        "args": [],
+        "cwd": "${workspaceFolder}/${input:projectPath}",
+        "stopAtEntry": false,
+        "serverReadyAction": {
+          "action": "openExternally",
+          "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+        },
+        "env": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+      }
+    ],
+    "inputs": [
+      {
+        "id": "projectPath",
+        "type": "pickString",
+        "description": "Select the project folder to run",
+        "options": [
+          "Sagi.Sdk.AWS.DynamoDb/src/Samples",
+        ]
+      },
+      {
+        "id": "projectDll",
+        "type": "pickString",
+        "description": "Select the DLL file to execute",
+        "options": [
+          "Samples.dll",
+        ]
+      }
+    ]
+  }

@@ -1,0 +1,36 @@
+name: Continous Integration
+
+on:
+  push:
+    branches:
+      - release/**
+      - feature/**
+      - main
+
+jobs:
+  versioning:
+    uses: laboratorio-net/actions/.github/workflows/git-version.yaml@v1
+
+  build:
+    uses: laboratorio-net/actions/.github/workflows/build-dotnet.yaml@v1
+    needs: Versioning
+    with:
+      solution-name: Sagi.Sdk.sln
+      create-packages: true
+      package-version: ${{needs.versioning.outputs.version}}
+    secrets:
+      sonar-token: ${{ secrets.SONAR_TOKEN }}
+
+  deploy:
+    uses: laboratorio-net/actions/.github/workflows/nuget-deploy.yaml@v1
+    needs: build
+    with:
+      prefix-allowed-branch: release
+    secrets:
+      nuget-api-key: ${{ secrets.NUGET_PACAKGES_KEY }}
+
+  tag:
+    uses: laboratorio-net/actions/.github/workflows/create-tag.yaml@v1
+    needs: [versioning, build, deploy]
+    with:
+      version: ${{needs.versioning.outputs.version}}

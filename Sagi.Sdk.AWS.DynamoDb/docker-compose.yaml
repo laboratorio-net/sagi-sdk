@@ -1,0 +1,33 @@
+services:
+  dynamodb:
+    image: amazon/dynamodb-local:2.6.1
+    container_name: dynamodb
+    ports:
+      - "8000:8000"
+    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-inMemory"]
+    environment:
+      AWS_ACCESS_KEY_ID: root
+      AWS_SECRET_ACCESS_KEY: secret
+
+  dynamodb-admin:
+    depends_on:
+      - dynamodb
+    image: leandroalves86/dynamodb-admin:1.0.0
+    container_name: dynamodb-admin
+    ports:
+      - 8001:8001
+    environment:
+      DYNAMO_ENDPOINT: http://dynamodb:8000
+      AWS_ACCESS_KEY_ID: root
+      AWS_SECRET_ACCESS_KEY: secret
+
+  samples:
+    image: leandroalves86/sagi.sdk.aws.dynamodb.samples:001
+    container_name: dynamodb.samples
+    build:
+      context: ../
+      dockerfile: ./Sagi.Sdk.AWS.DynamoDb/src/Samples/Dockerfile
+    environment:
+      AWS__AccessKey: root
+      AWS__SecretKey: secret
+      AWS__ServiceUrl: http://dynamodb:8000
