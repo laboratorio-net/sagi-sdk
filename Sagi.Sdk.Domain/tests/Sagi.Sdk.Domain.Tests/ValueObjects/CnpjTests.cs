@@ -204,7 +204,7 @@ public class CnpjTests
     [Fact]
     public void Equals_ShouldReturnTrue_ForSameAlphanumericCnpj()
     {
-        var a = new Cnpj("7YSLA A4X000157");
+        var a = new Cnpj("7YSLAA4X000157");
         var b = new Cnpj("7Y.SLA.A4X/0001-57");
 
         Assert.Equal(a.Number, b.Number);
