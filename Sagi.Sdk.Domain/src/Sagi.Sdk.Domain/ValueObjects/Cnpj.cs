@@ -5,18 +5,32 @@ namespace Sagi.Sdk.Domain.ValueObjects;
 
 public sealed class Cnpj : ValueObject<Cnpj>
 {
+    private static readonly Regex s_numericRaw = new(@"^\d{14}$", RegexOptions.Compiled);
+    private static readonly Regex s_alphanumericRaw = new(@"^[A-Z0-9]{14}$", RegexOptions.Compiled);
+    private static readonly Regex s_formattedMask = new(@"^[A-Z0-9]{2}\.[A-Z0-9]{3}\.[A-Z0-9]{3}\/[A-Z0-9]{4}-\d{2}$", RegexOptions.Compiled);
+
     public Cnpj(string number)
     {
-        var onlyNumbers = number?.Trim().Where(char.IsDigit) ?? "";
-        Number = string.Join("", onlyNumbers);
+        Number = Normalize(number);
     }
 
     public string? Number { get; }
 
+    public bool IsAlphanumeric => Number is not null && !s_numericRaw.IsMatch(Number);
+
     public string Formatted
-        => long.TryParse(Number, out var number) ?
-           number.ToString(@"00\.000\.000\/0000\-00") :
-           string.Empty;
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(Number) || Number.Length != 14)
+                return string.Empty;
+
+            if (!IsAlphanumeric && long.TryParse(Number, out long numeric))
+                return numeric.ToString(@"00\.000\.000\/0000\-00");
+
+            return $"{Number[..2]}.{Number[2..5]}.{Number[5..8]}/{Number[8..12]}-{Number[12..]}";
+        }
+    }
 
     public override void Validate()
     {
@@ -29,53 +43,18 @@ public sealed class Cnpj : ValueObject<Cnpj>
             return;
         }
 
-        if (!Regex.IsMatch(Number, @"^\d{14}$"))
+        if (Number.Length != 14)
         {
-            AddError(new Error(errorCode, "CNPJ must contain exactly 14 digits."));
+            AddError(new Error(errorCode, "CNPJ must contain exactly 14 characters."));
             return;
         }
 
-        if (!IsValidCnpj(Number))
-        {
+        bool valid = IsAlphanumeric
+            ? AlphanumericValidator.IsValid(Number)
+            : NumericValidator.IsValid(Number);
+
+        if (!valid)
             AddError(new Error(errorCode, "Invalid CNPJ number."));
-        }
-    }
-
-    private static bool IsValidCnpj(string cnpj)
-    {
-        var invalids = new[]
-        {
-            "00000000000000", "11111111111111", "22222222222222", "33333333333333",
-            "44444444444444", "55555555555555", "66666666666666", "77777777777777",
-            "88888888888888", "99999999999999"
-        };
-
-        if (invalids.Contains(cnpj)) return false;
-
-        int[] mult1 = { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
-        int[] mult2 = { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
-
-        var tempCnpj = cnpj[..12];
-        var sum = 0;
-
-        for (int i = 0; i < 12; i++)
-            sum += int.Parse(tempCnpj[i].ToString()) * mult1[i];
-
-        var remainder = sum % 11;
-        var firstDigit = remainder < 2 ? 0 : 11 - remainder;
-
-        tempCnpj += firstDigit;
-        sum = 0;
-
-        for (int i = 0; i < 13; i++)
-            sum += int.Parse(tempCnpj[i].ToString()) * mult2[i];
-
-        remainder = sum % 11;
-        var secondDigit = remainder < 2 ? 0 : 11 - remainder;
-
-        var expectedCnpj = tempCnpj + secondDigit;
-
-        return cnpj == expectedCnpj;
     }
 
     public static bool TryParse(string number, out Cnpj cnpj)
@@ -96,12 +75,117 @@ public sealed class Cnpj : ValueObject<Cnpj>
         if (other is null) return false;
         if (ReferenceEquals(this, other)) return true;
 
-        return Number == other.Number;
+        return string.Equals(Number, other.Number, StringComparison.OrdinalIgnoreCase);
     }
 
     public override bool Equals(object? obj) => Equals(obj as Cnpj);
 
-    public override int GetHashCode() => HashCode.Combine(Number);
+    public override int GetHashCode() => HashCode.Combine(Number?.ToUpperInvariant());
 
     public override string ToString() => Formatted;
+
+    private static string? Normalize(string? input)
+    {
+        if (input is null)
+            return null;
+
+        string value = input.Trim().ToUpperInvariant();
+
+        if (s_formattedMask.IsMatch(value))
+            return Regex.Replace(value, @"[.\-/]", string.Empty);
+
+        if (s_numericRaw.IsMatch(value) || s_alphanumericRaw.IsMatch(value))
+            return value;
+
+        string digitsOnly = new(value.Where(char.IsDigit).ToArray());
+        if (digitsOnly.Length == 14)
+            return digitsOnly;
+
+        return value;
+    }
+
+    private static class NumericValidator
+    {
+        private static readonly int[] s_weights1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+        private static readonly int[] s_weights2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+
+        internal static bool IsValid(string cnpj)
+        {
+            if (IsAllSameDigit(cnpj)) return false;
+
+            int first = CalculateDigit(cnpj[..12], s_weights1);
+            int second = CalculateDigit(cnpj[..13], s_weights2);
+
+            return cnpj[12] - '0' == first && cnpj[13] - '0' == second;
+        }
+
+        private static bool IsAllSameDigit(string cnpj)
+        {
+            char c = cnpj[0];
+            for (int i = 1; i < cnpj.Length; i++)
+                if (cnpj[i] != c) return false;
+            return true;
+        }
+
+        private static int CalculateDigit(string slice, int[] weights)
+        {
+            int sum = 0;
+            for (int i = 0; i < slice.Length; i++)
+                sum += (slice[i] - '0') * weights[i];
+
+            int remainder = sum % 11;
+            return remainder < 2 ? 0 : 11 - remainder;
+        }
+    }
+
+    private static class AlphanumericValidator
+    {
+        private const int AsciiOffset = 48;
+        private const int Modulus = 11;
+        private const int WeightMin = 2;
+        private const int WeightMax = 9;
+
+        internal static bool IsValid(string cnpj)
+        {
+            if (!HasValidFormat(cnpj)) return false;
+            if (IsAllSameChar(cnpj)) return false;
+
+            int first = CalculateCheckDigit(cnpj[..12]);
+            int second = CalculateCheckDigit(cnpj[..13]);
+
+            return cnpj[12] - '0' == first && cnpj[13] - '0' == second;
+        }
+
+        private static bool HasValidFormat(string cnpj)
+        {
+            for (int i = 0; i < 12; i++)
+                if (!char.IsAsciiLetterUpper(cnpj[i]) && !char.IsAsciiDigit(cnpj[i]))
+                    return false;
+
+            return char.IsAsciiDigit(cnpj[12]) && char.IsAsciiDigit(cnpj[13]);
+        }
+
+        private static bool IsAllSameChar(string cnpj)
+        {
+            char first = cnpj[0];
+            for (int i = 1; i < cnpj.Length; i++)
+                if (cnpj[i] != first) return false;
+            return true;
+        }
+
+        private static int CalculateCheckDigit(string baseChars)
+        {
+            int sum = 0;
+            int weight = WeightMin;
+
+            for (int i = baseChars.Length - 1; i >= 0; i--)
+            {
+                sum += (baseChars[i] - AsciiOffset) * weight;
+                weight = weight == WeightMax ? WeightMin : weight + 1;
+            }
+
+            int remainder = sum % Modulus;
+            return remainder < WeightMin ? 0 : Modulus - remainder;
+        }
+    }
 }
