@@ -4,7 +4,7 @@ using Sagi.Sdk.Results;
 
 namespace Sagi.Sdk.Domain.ValueObjects;
 
-public sealed class Email : ValueObject<Email>
+public sealed partial class Email : ValueObject<Email>
 {
     public Email(string address) : this(address, 256) { }
 
@@ -29,7 +29,7 @@ public sealed class Email : ValueObject<Email>
         }
 
         var data = Address.Split('@');
-        return data?.Length == 2 ? data[1] : string.Empty;
+        return data.Length == 2 ? data[1] : string.Empty;
     }
 
     private string GetUser()
@@ -40,7 +40,7 @@ public sealed class Email : ValueObject<Email>
         }
 
         var data = Address.Split('@');
-        return data?.Length == 2 ? data[0] : string.Empty;
+        return data.Length == 2 ? data[0] : string.Empty;
     }
 
     private string GetDomain()
@@ -51,7 +51,7 @@ public sealed class Email : ValueObject<Email>
         }
 
         var data = Host.Split('.');
-        return data?.Length > 1 ? data[0] : string.Empty;
+        return data.Length > 1 ? data[0] : string.Empty;
     }
 
     private string GetTopLevenDomain()
@@ -62,7 +62,7 @@ public sealed class Email : ValueObject<Email>
         }
 
         var data = Host.Split('.');
-        return data?.Length > 1 ? string.Join('.', data[1..]) : string.Empty;
+        return data.Length > 1 ? string.Join('.', data[1..]) : string.Empty;
     }
 
     public string Address { get; }
@@ -95,13 +95,15 @@ public sealed class Email : ValueObject<Email>
         ValidateAddressPattern(error_code);
     }
 
+    [GeneratedRegex(@"^[a-zA-Z0-9_.-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$", RegexOptions.IgnoreCase)]
+    private static partial Regex EmailPatternRegex();
+
     private void ValidateAddressPattern(string errorCode)
     {
         try
         {
-            var pattern = @"^[a-zA-Z0-9_.-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$";
-            var isMatch = Regex.IsMatch(Address, pattern, RegexOptions.IgnoreCase);
-            if (isMatch is false)
+            bool isMatch = EmailPatternRegex().IsMatch(Address);
+            if (!isMatch)
                 AddError(new Error(errorCode, "The entered e-mail is invalid."));
         }
         catch (Exception)

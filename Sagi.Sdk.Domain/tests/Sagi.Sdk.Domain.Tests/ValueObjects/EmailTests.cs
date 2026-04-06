@@ -28,9 +28,9 @@ public class EmailTests
     [Theory]
     [InlineData("")]
     [InlineData(null)]
-    public void Email_ShouldBeInvalid_WhenAddressIsNullorEmpty(string address)
+    public void Email_ShouldBeInvalid_WhenAddressIsNullorEmpty(string? address)
     {
-        var sut = new Email(address);
+        var sut = new Email(address!);
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -40,9 +40,9 @@ public class EmailTests
     [Theory]
     [InlineData("")]
     [InlineData(null)]
-    public void HostAndUser_ShouldBeEmpty_WhenAdressIsNullOrEmpty(string address)
+    public void HostAndUser_ShouldBeEmpty_WhenAdressIsNullOrEmpty(string? address)
     {
-        var sut = new Email(address);
+        var sut = new Email(address!);
         Assert.Equal(string.Empty, sut.Host);
         Assert.Equal(string.Empty, sut.User);
     }
@@ -58,9 +58,9 @@ public class EmailTests
     [Theory]
     [InlineData("")]
     [InlineData(null)]
-    public void DomainAndTopLevelDomain_ShouldBeEmpty_WhenHostIsNullOrEmpty(string address)
+    public void DomainAndTopLevelDomain_ShouldBeEmpty_WhenHostIsNullOrEmpty(string? address)
     {
-        var sut = new Email(address);
+        var sut = new Email(address!);
         Assert.Equal(string.Empty, sut.Domain);
         Assert.Equal(string.Empty, sut.TopLevelDomain);
     }
@@ -263,7 +263,7 @@ public class EmailTests
     public void Equals_ShouldReturnFalse_WhenOtherIsNull()
     {
         var sut = new Email("contact@email.com");
-        Email other = null;
+        Email? other = null;
 
         Assert.False(sut.Equals(other));
     }

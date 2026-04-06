@@ -5,8 +5,10 @@ using Sagi.Sdk.Results;
 
 namespace Sagi.Sdk.Domain.ValueObjects;
 
-public sealed class Cpf : ValueObject<Cpf>
+public sealed partial class Cpf : ValueObject<Cpf>
 {
+    [GeneratedRegex(@"^\d{11}$")]
+    private static partial Regex ElevenDigitsRegex();
     public Cpf(string number)
     {
         var onlyNumbers = number?.Trim().Where(char.IsDigit) ?? "";
@@ -31,7 +33,7 @@ public sealed class Cpf : ValueObject<Cpf>
             return;
         }
 
-        if (!Regex.IsMatch(Number, @"^\d{11}$"))
+        if (!ElevenDigitsRegex().IsMatch(Number))
         {
             AddError(new Error(errorCode, "CPF must contain exactly 11 digits."));
             return;

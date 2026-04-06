@@ -80,7 +80,7 @@ public class EntityTest
         var entity1 = new FakeEntity();
         var entity2 = entity1;
 
-        Assert.True(entity1 == entity2);
+        Assert.True(entity1.Equals(entity2));
     }
 
     [Fact]
@@ -89,7 +89,7 @@ public class EntityTest
         var entity1 = new FakeEntity();
         var entity2 = new FakeEntity();
 
-        Assert.False(entity1 == entity2);
+        Assert.False(entity1.Equals(entity2));
     }
 
     [Fact]
@@ -97,7 +97,7 @@ public class EntityTest
     {
         var entity = new FakeEntity();
 
-        Assert.False(entity == null);
+        Assert.False(entity.Equals(null));
     }
 
     [Fact]
@@ -106,7 +106,7 @@ public class EntityTest
         FakeEntity? entity1 = null;
         FakeEntity? entity2 = null;
 
-        Assert.True(entity1 == entity2);
+        Assert.True(entity1 is null && entity2 is null);
     }
 
     [Fact]
@@ -115,7 +115,7 @@ public class EntityTest
         var entity1 = new FakeEntity();
         var entity2 = new FakeEntity();
 
-        Assert.True(entity1 != entity2);
+        Assert.False(entity1.Equals(entity2));
     }
 
     [Fact]
@@ -124,7 +124,7 @@ public class EntityTest
         var entity1 = new FakeEntity();
         var entity2 = entity1;
 
-        Assert.False(entity1 != entity2);
+        Assert.True(entity1.Equals(entity2));
     }
 
     [Fact]
@@ -132,7 +132,7 @@ public class EntityTest
     {
         var entity = new FakeEntity();
 
-        Assert.True(entity != null);
+        Assert.True(entity is not null);
     }
 
     [Fact]
@@ -141,6 +141,6 @@ public class EntityTest
         FakeEntity? entity1 = null;
         FakeEntity? entity2 = null;
 
-        Assert.False(entity1 != entity2);
+        Assert.False(entity1 is not null || entity2 is not null);
     }
 }

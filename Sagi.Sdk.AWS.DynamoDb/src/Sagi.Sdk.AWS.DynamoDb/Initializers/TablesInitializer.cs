@@ -32,12 +32,12 @@ public class TablesInitializer : IDynamoDbTableInitializer
 
     private async Task CreateIfNotExistAsync(CreateTableRequest request)
     {
-        if ((await TableExistAsync(request.TableName)) == false)
+        if (!await TableExistAsync(request.TableName))
         {
             await _dynamoDb.CreateTableAsync(request);
         }
 
-        var args = DynamoDbTableEventsArgs.Create(request.TableName);
+        var args = DynamoDbTableReadyEventArgs.Create(request.TableName);
         OnReadyTable(args);
     }
 
@@ -48,19 +48,19 @@ public class TablesInitializer : IDynamoDbTableInitializer
         return existTable;
     }
 
-    private void OnReadyTable(DynamoDbTableEventsArgs e) =>
+    private void OnReadyTable(DynamoDbTableReadyEventArgs e) =>
         TableIsReady?.Invoke(this, e);
 
     public static event DynamoDbTableEventHandler? TableIsReady;
 }
 
 
-public class DynamoDbTableEventsArgs : EventArgs
+public class DynamoDbTableReadyEventArgs : EventArgs
 {
     public required string TableName { get; set; }
     public DateTime TimeStamp { get; set; }
 
-    public static DynamoDbTableEventsArgs Create(string tableName) => new()
+    public static DynamoDbTableReadyEventArgs Create(string tableName) => new()
     {
         TableName = tableName,
         TimeStamp = DateTime.UtcNow,
@@ -68,4 +68,4 @@ public class DynamoDbTableEventsArgs : EventArgs
 }
 
 public delegate Task DynamoDbTableEventHandler(
-    object sender, DynamoDbTableEventsArgs e);
+    object sender, DynamoDbTableReadyEventArgs e);

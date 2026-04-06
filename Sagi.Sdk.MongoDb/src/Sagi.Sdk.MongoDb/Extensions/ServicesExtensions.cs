@@ -54,7 +54,7 @@ public static class ServicesExtensions
 
     private static void ThrowIfNull(MongoOptions options)
     {
-        ArgumentNullException.ThrowIfNull(options.ConnectionString, nameof(options.ConnectionString));
-        ArgumentNullException.ThrowIfNull(options.DatabaseName, nameof(options.DatabaseName));
+        ArgumentNullException.ThrowIfNull(options.ConnectionString);
+        ArgumentNullException.ThrowIfNull(options.DatabaseName);
     }
 }

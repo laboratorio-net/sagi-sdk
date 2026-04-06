@@ -10,7 +10,7 @@ public abstract class Event<T>
 
     public abstract string Name { get; }
 
-    public Event()
+    protected Event()
     {
         Timestamp = DateTimeOffset.UtcNow;
     }

@@ -27,9 +27,9 @@ public class CityTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData(" ")]
-    public void City_ShouldBeInvalid_WhenNameIsInvalid(string name)
+    public void City_ShouldBeInvalid_WhenNameIsInvalid(string? name)
     {
-        var sut = new City(name, _validState);
+        var sut = new City(name!, _validState);
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -38,7 +38,7 @@ public class CityTests
     [Fact]
     public void City_ShouldBeInvalid_WhenStateIsNull()
     {
-        var sut = new City("Natal", null);
+        var sut = new City("Natal", null!);
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -69,7 +69,7 @@ public class CityTests
     [Fact]
     public void TryParse_ShouldReturnFalse_WhenCityIsInvalid()
     {
-        var result = City.TryParse("", null, out var city);
+        var result = City.TryParse("", null!, out var city);
 
         Assert.False(result);
         Assert.True(city.IsInvalid);

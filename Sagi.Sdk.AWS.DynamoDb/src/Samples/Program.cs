@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Sagi.Sdk.AWS.DynamoDb.Hosting;
 
+using Samples;
 using Samples.Services;
 using Samples.Tables;
 
@@ -30,5 +31,3 @@ await DynamoDbHosting
 
 Console.CancelKeyPress += (obj, args)
     => DynamoDbHosting.StopAsync().Wait();
-
-record AwsOptions(string Accesskey, string SecretKey, string ServiceUrl);

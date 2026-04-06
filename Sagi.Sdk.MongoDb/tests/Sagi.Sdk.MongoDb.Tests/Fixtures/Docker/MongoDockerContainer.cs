@@ -19,5 +19,9 @@ public class MongoDockerContainer : IDisposable
             .Start();
     }
 
-    public void Dispose() => Container?.Dispose();
+    public void Dispose()
+    {
+        Container?.Dispose();
+        GC.SuppressFinalize(this);
+    }
 }

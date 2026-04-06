@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Sagi.Sdk.AWS.DynamoDb.Context;
 using Sagi.Sdk.AWS.DynamoDb.Initializers;
 
+using Samples.Entities;
 using Samples.Tables;
 
 namespace Samples.Services;
@@ -19,7 +20,7 @@ public class PaymentService(IDynamoDbContext<Payment> context) : BackgroundServi
         return Task.CompletedTask;
     }
 
-    Task OnTableReady(object sender, DynamoDbTableEventsArgs e)
+    Task OnTableReady(object sender, DynamoDbTableReadyEventArgs e)
     {
         Console.WriteLine($"[Payment Service] - Table {e.TableName} is ready.");
         if (e.TableName == PaymentTable.TABLE_NAME)

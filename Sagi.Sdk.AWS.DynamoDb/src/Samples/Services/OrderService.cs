@@ -20,7 +20,7 @@ public class OrderService(IDynamoDbContext<Order> context) : BackgroundService
         return Task.CompletedTask;
     }
 
-    async Task OnTableReady(object sender, DynamoDbTableEventsArgs e)
+    async Task OnTableReady(object sender, DynamoDbTableReadyEventArgs e)
     {
         Console.WriteLine($"[Order Service] - Table {e.TableName} is ready.");
         if (e.TableName == OrderTable.TABLE_NAME)

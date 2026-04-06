@@ -22,9 +22,9 @@ public class StateTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData(" ")]
-    public void State_ShouldBeInvalid_WhenNameIsEmpty(string name)
+    public void State_ShouldBeInvalid_WhenNameIsEmpty(string? name)
     {
-        var sut = new State(name, "RN", _validCountry);
+        var sut = new State(name!, "RN", _validCountry);
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -36,9 +36,9 @@ public class StateTests
     [InlineData(" ")]
     [InlineData("R")]
     [InlineData("RNE")]
-    public void State_ShouldBeInvalid_WhenAbbreviationIsInvalid(string abbreviation)
+    public void State_ShouldBeInvalid_WhenAbbreviationIsInvalid(string? abbreviation)
     {
-        var sut = new State("Rio Grande do Norte", abbreviation, _validCountry);
+        var sut = new State("Rio Grande do Norte", abbreviation!, _validCountry);
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -47,7 +47,7 @@ public class StateTests
     [Fact]
     public void State_ShouldBeInvalid_WhenCountryIsNull()
     {
-        var sut = new State("Rio Grande do Norte", "RN", null);
+        var sut = new State("Rio Grande do Norte", "RN", null!);
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -77,7 +77,7 @@ public class StateTests
     [Fact]
     public void TryParse_ShouldReturnFalseAndNotParse_WhenValuesAreInvalid()
     {
-        var result = State.TryParse("", "R", null, out var state);
+        var result = State.TryParse("", "R", null!, out var state);
 
         Assert.False(result);
         Assert.True(state.IsInvalid);

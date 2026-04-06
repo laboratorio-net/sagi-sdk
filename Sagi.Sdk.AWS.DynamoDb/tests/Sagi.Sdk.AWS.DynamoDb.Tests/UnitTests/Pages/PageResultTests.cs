@@ -18,7 +18,7 @@ public class PageResultTests
     [Theory]
     [InlineData("")]
     [InlineData(null)]
-    public void HasNextPage_ShouldBeFalse_WhenPageTokenIsNull(string token)
+    public void HasNextPage_ShouldBeFalse_WhenPageTokenIsNull(string? token)
     {
         var sut = new PageResult<string>
         {
