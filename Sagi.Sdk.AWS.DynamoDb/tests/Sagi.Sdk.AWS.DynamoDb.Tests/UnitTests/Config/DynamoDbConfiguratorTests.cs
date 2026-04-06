@@ -21,7 +21,7 @@ public class DynamoDbConfiguratorTests
         Assert.Contains(table, sut.Tables);
     }
 
-    [Theory, AutoNSubstituteData]
+    [Fact]
     public void ConfigureTable_ShouldThrowIfTableIsNull()
     {
         var sut = new DynamoDbConfigurator();

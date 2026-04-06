@@ -9,7 +9,7 @@ using Sagi.Sdk.AWS.DynamoDb.Extensions;
 namespace Sagi.Sdk.AWS.DynamoDb.Hosting;
 
 [ExcludeFromCodeCoverage]
-public class DynamoDbHosting
+public static class DynamoDbHosting
 {
     public static IServiceProvider? Provider { get; private set; }
     private static IHost? DynamoDbHost { get; set; }

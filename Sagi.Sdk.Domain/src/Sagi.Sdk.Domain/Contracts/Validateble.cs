@@ -13,13 +13,13 @@ public abstract class Validateble
 
     protected void AddError(IError error)
     {
-        ArgumentNullException.ThrowIfNull(error, nameof(error));
+        ArgumentNullException.ThrowIfNull(error);
         _errors.Add(error);
     }
 
     protected void AddErrors(IEnumerable<IError> errors)
     {
-        ArgumentNullException.ThrowIfNull(errors, nameof(errors));
+        ArgumentNullException.ThrowIfNull(errors);
         _errors.AddRange(errors);
     }
 

@@ -9,18 +9,18 @@ public class NameTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void Name_ShouldBeInvalid_WhenFirstNameIsNotInformed(string firstName)
+    public void Name_ShouldBeInvalid_WhenFirstNameIsNotInformed(string? firstName)
     {
-        var name = new Name(firstName, "Foo");
+        var name = new Name(firstName!, "Foo");
         Assert.True(name.IsInvalid);
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void Name_ShouldBeInvalid_WhenLastNameIsNotInformed(string lastName)
+    public void Name_ShouldBeInvalid_WhenLastNameIsNotInformed(string? lastName)
     {
-        var name = new Name("Foo", lastName);
+        var name = new Name("Foo", lastName!);
         Assert.True(name.IsInvalid);
     }
 
@@ -87,7 +87,7 @@ public class NameTests
     public void TryParse_ShouldReturnFalse_WhenStringIsNull()
     {
         Assert.Throws<ArgumentNullException>(
-            () => Name.TryParse(null, out _));
+            () => Name.TryParse(null!, out _));
     }
 
     [Fact]

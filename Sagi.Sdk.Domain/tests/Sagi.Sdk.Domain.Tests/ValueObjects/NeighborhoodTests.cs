@@ -29,9 +29,9 @@ public class NeighborhoodTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData(" ")]
-    public void Neighborhood_ShouldBeInvalid_WhenNameIsInvalid(string name)
+    public void Neighborhood_ShouldBeInvalid_WhenNameIsInvalid(string? name)
     {
-        var sut = new Neighborhood(name, _validCity);
+        var sut = new Neighborhood(name!, _validCity);
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -40,7 +40,7 @@ public class NeighborhoodTests
     [Fact]
     public void Neighborhood_ShouldBeInvalid_WhenCityIsNull()
     {
-        var sut = new Neighborhood("Lagoa Nova", null);
+        var sut = new Neighborhood("Lagoa Nova", null!);
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -72,7 +72,7 @@ public class NeighborhoodTests
     [Fact]
     public void TryParse_ShouldReturnFalse_WhenNeighborhoodIsInvalid()
     {
-        var result = Neighborhood.TryParse("", null, out var neighborhood);
+        var result = Neighborhood.TryParse("", null!, out var neighborhood);
 
         Assert.False(result);
         Assert.True(neighborhood.IsInvalid);

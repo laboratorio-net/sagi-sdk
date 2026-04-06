@@ -12,10 +12,10 @@ public class Error : IError
     [JsonConstructor]
     public Error(string code, string message)
     {
-        ArgumentException.ThrowIfNullOrEmpty(code, nameof(code));
+        ArgumentException.ThrowIfNullOrEmpty(code);
         Code = code;
 
-        ArgumentException.ThrowIfNullOrEmpty(message, nameof(message));
+        ArgumentException.ThrowIfNullOrEmpty(message);
         Message = message;
     }
 }

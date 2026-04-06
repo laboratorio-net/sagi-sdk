@@ -1,6 +1,8 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 
+using Samples.Entities;
+
 namespace Samples.Tables;
 
 public class PaymentTable : CreateTableRequest
@@ -20,7 +22,7 @@ public class PaymentTable : CreateTableRequest
             new (nameof(Payment.Id), KeyType.HASH),
             new (nameof(Payment.CreatedAt), KeyType.RANGE),
         ];
-        BillingMode = BillingMode.PAY_PER_REQUEST;;
+        BillingMode = BillingMode.PAY_PER_REQUEST;
         GlobalSecondaryIndexes = [];
     }
 }

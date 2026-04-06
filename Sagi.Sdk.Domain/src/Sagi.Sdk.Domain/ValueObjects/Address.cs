@@ -2,6 +2,12 @@ using Sagi.Sdk.Results;
 
 namespace Sagi.Sdk.Domain.ValueObjects;
 
+public record AddressLengthOptions(
+    short StreetMinLength = 2,
+    short StreetMaxLength = 80,
+    short NumberMinLength = 1,
+    short NumberMaxLength = 10);
+
 public sealed class Address : ValueObject<Address>
 {
     public Address(
@@ -10,16 +16,7 @@ public sealed class Address : ValueObject<Address>
         string complement,
         Neighborhood neighborhood,
         ZipCode zipCode)
-        : this(
-              street,
-              number,
-              complement,
-              neighborhood,
-              zipCode,
-              streetMinLength: 2,
-              streetMaxLength: 80,
-              numberMinLength: 1,
-              numberMaxLength: 10)
+        : this(street, number, complement, neighborhood, zipCode, new AddressLengthOptions())
     { }
 
     public Address(
@@ -28,10 +25,7 @@ public sealed class Address : ValueObject<Address>
         string complement,
         Neighborhood neighborhood,
         ZipCode zipCode,
-        short streetMinLength,
-        short streetMaxLength,
-        short numberMinLength,
-        short numberMaxLength)
+        AddressLengthOptions options)
     {
         Street = street?.Trim();
         Number = number?.Trim();
@@ -39,10 +33,10 @@ public sealed class Address : ValueObject<Address>
         Neighborhood = neighborhood;
         ZipCode = zipCode;
 
-        StreetMinLength = streetMinLength;
-        StreetMaxLength = streetMaxLength;
-        NumberMinLength = numberMinLength;
-        NumberMaxLength = numberMaxLength;
+        StreetMinLength = options.StreetMinLength;
+        StreetMaxLength = options.StreetMaxLength;
+        NumberMinLength = options.NumberMinLength;
+        NumberMaxLength = options.NumberMaxLength;
     }
 
     public string? Street { get; }

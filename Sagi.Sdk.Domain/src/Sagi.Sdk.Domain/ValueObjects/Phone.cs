@@ -3,8 +3,16 @@ using Sagi.Sdk.Results;
 
 namespace Sagi.Sdk.Domain.ValueObjects;
 
-public sealed class Phone : ValueObject<Phone>, IEquatable<Phone>
+public sealed partial class Phone : ValueObject<Phone>, IEquatable<Phone>
 {
+    [GeneratedRegex(@"^\+\d{1,4}$")]
+    private static partial Regex DdiPatternRegex();
+
+    [GeneratedRegex(@"^(?<ddi>\d{2})(?<ddd>\d{2})(?<number>\d{8,9})$")]
+    private static partial Regex PhonePartsRegex();
+
+    [GeneratedRegex(@"[^\d]")]
+    private static partial Regex NonDigitsRegex();
     public static readonly short NumberMaxLength = 9;
     public static readonly short DDDLength = 2;
     public static readonly string DefaultDDI = "+55";
@@ -43,7 +51,7 @@ public sealed class Phone : ValueObject<Phone>, IEquatable<Phone>
         if (string.IsNullOrWhiteSpace(DDD) || DDD.Length != DDDLength || !DDD.All(char.IsDigit))
             AddError(new Error(error_code, "DDD must contain exactly two digits."));
 
-        if (string.IsNullOrWhiteSpace(DDI) || !Regex.IsMatch(DDI, @"^\+\d{1,4}$"))
+        if (string.IsNullOrWhiteSpace(DDI) || !DdiPatternRegex().IsMatch(DDI))
             AddError(new Error(error_code, "DDI must start with '+' and contain up to 4 digits."));
     }
 
@@ -60,7 +68,7 @@ public sealed class Phone : ValueObject<Phone>, IEquatable<Phone>
         ArgumentNullException.ThrowIfNull(value);
 
         value = OnlyDigits(value);
-        var match = Regex.Match(value, @"^(?<ddi>\d{2})(?<ddd>\d{2})(?<number>\d{8,9})$");
+        Match match = PhonePartsRegex().Match(value);
         if (match.Success)
         {
             var ddi = $"+{match.Groups["ddi"].Value}";
@@ -90,7 +98,6 @@ public sealed class Phone : ValueObject<Phone>, IEquatable<Phone>
 
     private static string OnlyDigits(string value)
     {
-        var regex = new Regex(@"[^\d]", RegexOptions.Compiled);
-        return string.IsNullOrWhiteSpace(value) ? string.Empty : regex.Replace(value, string.Empty);
+        return string.IsNullOrWhiteSpace(value) ? string.Empty : NonDigitsRegex().Replace(value, string.Empty);
     }
 }
