@@ -1,3 +1,5 @@
+namespace Samples.Entities;
+
 public class Payment
 {
     public Guid Id { get; set; }

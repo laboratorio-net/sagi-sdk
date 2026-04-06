@@ -19,7 +19,7 @@ public class PhoneTests
     [Fact]
     public void TryParse_ShouldThrowException_WhenInputIsNull()
     {
-        Assert.Throws<ArgumentNullException>(() => Phone.TryParse(null, out _));
+        Assert.Throws<ArgumentNullException>(() => Phone.TryParse(null!, out _));
     }
 
     [Theory]
@@ -78,7 +78,7 @@ public class PhoneTests
     [Fact]
     public void ImplicitConversion_ShouldReturnValidPhone_WhenInputIsValid()
     {
-        Phone phone = "5511987654321";
+        Phone? phone = "5511987654321";
         Assert.NotNull(phone);
         Assert.Equal("+55", phone.DDI);
         Assert.Equal("11", phone.DDD);

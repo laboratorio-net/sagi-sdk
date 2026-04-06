@@ -36,9 +36,9 @@ public class AddressTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("A")]
-    public void Address_ShouldBeInvalid_WhenStreetIsTooShort(string street)
+    public void Address_ShouldBeInvalid_WhenStreetIsTooShort(string? street)
     {
-        var sut = new Address(street, "123", null, _neighborhood, _zipCode);
+        var sut = new Address(street!, "123", null!, _neighborhood, _zipCode);
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -48,7 +48,7 @@ public class AddressTests
     public void Address_ShouldBeInvalid_WhenStreetIsTooLong()
     {
         var street = new string('a', 81);
-        var sut = new Address(street, "123", null, _neighborhood, _zipCode);
+        var sut = new Address(street, "123", null!, _neighborhood, _zipCode);
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -57,9 +57,9 @@ public class AddressTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void Address_ShouldBeInvalid_WhenNumberIsEmptyOrNull(string number)
+    public void Address_ShouldBeInvalid_WhenNumberIsEmptyOrNull(string? number)
     {
-        var sut = new Address("Rua das Flores", number, null, _neighborhood, _zipCode);
+        var sut = new Address("Rua das Flores", number!, null!, _neighborhood, _zipCode);
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -69,7 +69,7 @@ public class AddressTests
     public void Address_ShouldBeInvalid_WhenNumberIsTooLong()
     {
         var number = new string('9', 11);
-        var sut = new Address("Rua das Flores", number, null, _neighborhood, _zipCode);
+        var sut = new Address("Rua das Flores", number, null!, _neighborhood, _zipCode);
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -81,7 +81,7 @@ public class AddressTests
         var invalidCity = new City("", _state);
         var invalidNeighborhood = new Neighborhood("", invalidCity);
 
-        var sut = new Address("Rua das Flores", "123", null, invalidNeighborhood, _zipCode);
+        var sut = new Address("Rua das Flores", "123", null!, invalidNeighborhood, _zipCode);
         sut.Validate();
 
         Assert.True(sut.IsInvalid);
@@ -92,7 +92,7 @@ public class AddressTests
     {
         var invalidZipCode = new ZipCode("");
 
-        var sut = new Address("Rua das Flores", "123", null, _neighborhood, invalidZipCode);
+        var sut = new Address("Rua das Flores", "123", null!, _neighborhood, invalidZipCode);
         sut.Validate();
 
         Assert.True(sut.IsInvalid);

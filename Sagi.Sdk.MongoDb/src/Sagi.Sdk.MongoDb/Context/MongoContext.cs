@@ -6,7 +6,7 @@ namespace Sagi.Sdk.MongoDb.Context;
 
 public abstract class MongoContext<T> : IMongoContext<T> where T : Document
 {
-    public MongoContext(IMongoDatabase database) 
+    protected MongoContext(IMongoDatabase database) 
         => Collection = database.GetCollection<T>(CollectionName);
 
     public abstract string CollectionName { get; }

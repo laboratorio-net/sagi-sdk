@@ -23,7 +23,7 @@ public sealed class ZipCode : ValueObject<ZipCode>
         if (other is null) return false;
         if (ReferenceEquals(this, other)) return true;
 
-        return Value == other?.Value;
+        return Value == other.Value;
     }
 
     public override bool Equals(object? obj) => Equals(obj as ZipCode);

@@ -1,11 +1,9 @@
 using Sagi.Sdk.Domain.Contracts;
-using Sagi.Sdk.Results.Contracts;
 
 namespace Sagi.Sdk.Domain.Entities;
 
 public abstract class Entity<T> : Validateble
 {
-    private readonly List<IError> _errors = [];
     private readonly List<Event<T>> _events = [];
 
     protected Entity()
@@ -57,22 +55,6 @@ public abstract class Entity<T> : Validateble
         if (ReferenceEquals(null, compareTo)) return false;
 
         return Id!.Equals(compareTo.Id);
-    }
-
-    public static bool operator ==(Entity<T> a, Entity<T> b)
-    {
-        if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
-            return true;
-
-        if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
-            return false;
-
-        return a.Equals(b);
-    }
-
-    public static bool operator !=(Entity<T> a, Entity<T> b)
-    {
-        return !(a == b);
     }
 
     public override int GetHashCode()

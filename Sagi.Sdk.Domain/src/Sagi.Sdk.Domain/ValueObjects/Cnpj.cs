@@ -3,11 +3,19 @@ using Sagi.Sdk.Results;
 
 namespace Sagi.Sdk.Domain.ValueObjects;
 
-public sealed class Cnpj : ValueObject<Cnpj>
+public sealed partial class Cnpj : ValueObject<Cnpj>
 {
-    private static readonly Regex s_numericRaw = new(@"^\d{14}$", RegexOptions.Compiled);
-    private static readonly Regex s_alphanumericRaw = new(@"^[A-Z0-9]{14}$", RegexOptions.Compiled);
-    private static readonly Regex s_formattedMask = new(@"^[A-Z0-9]{2}\.[A-Z0-9]{3}\.[A-Z0-9]{3}\/[A-Z0-9]{4}-\d{2}$", RegexOptions.Compiled);
+    [GeneratedRegex(@"^\d{14}$")]
+    private static partial Regex NumericRawRegex();
+
+    [GeneratedRegex(@"^[A-Z0-9]{14}$")]
+    private static partial Regex AlphanumericRawRegex();
+
+    [GeneratedRegex(@"^[A-Z0-9]{2}\.[A-Z0-9]{3}\.[A-Z0-9]{3}\/[A-Z0-9]{4}-\d{2}$")]
+    private static partial Regex FormattedMaskRegex();
+
+    [GeneratedRegex(@"[.\-/]")]
+    private static partial Regex FormattedSeparatorsRegex();
 
     public Cnpj(string number)
     {
@@ -16,7 +24,7 @@ public sealed class Cnpj : ValueObject<Cnpj>
 
     public string? Number { get; }
 
-    public bool IsAlphanumeric => Number is not null && !s_numericRaw.IsMatch(Number);
+    public bool IsAlphanumeric => Number is not null && !NumericRawRegex().IsMatch(Number);
 
     public string Formatted
     {
@@ -91,10 +99,10 @@ public sealed class Cnpj : ValueObject<Cnpj>
 
         string value = input.Trim().ToUpperInvariant();
 
-        if (s_formattedMask.IsMatch(value))
-            return Regex.Replace(value, @"[.\-/]", string.Empty);
+        if (FormattedMaskRegex().IsMatch(value))
+            return FormattedSeparatorsRegex().Replace(value, string.Empty);
 
-        if (s_numericRaw.IsMatch(value) || s_alphanumericRaw.IsMatch(value))
+        if (NumericRawRegex().IsMatch(value) || AlphanumericRawRegex().IsMatch(value))
             return value;
 
         string digitsOnly = new(value.Where(char.IsDigit).ToArray());

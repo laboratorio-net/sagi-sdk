@@ -7,7 +7,7 @@ public class ZipCodeTests
     [Fact]
     public void ZipCode_ShouldThrowArgumentNullException_WhenValueIsNull()
     {
-        Assert.Throws<ArgumentNullException>(() => new ZipCode(null));
+        Assert.Throws<ArgumentNullException>(() => new ZipCode(null!));
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public class ZipCodeTests
     public void Equals_ShouldReturnFalse_WhenOtherIsNull()
     {
         var sut = new ZipCode("59157408");
-        ZipCode other = null;
+        ZipCode? other = null;
 
         Assert.False(sut.Equals(other));
     }
@@ -121,9 +121,9 @@ public class ZipCodeTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void TryParse_ShouldReturnFalseAndNotParse_WhenValueIsNullOrEmpty(string value)
+    public void TryParse_ShouldReturnFalseAndNotParse_WhenValueIsNullOrEmpty(string? value)
     {
-        var parsed = ZipCode.TryParse(value, out var zipCode);
+        var parsed = ZipCode.TryParse(value!, out var zipCode);
 
         Assert.False(parsed);
         Assert.Null(zipCode);
@@ -132,7 +132,7 @@ public class ZipCodeTests
     [Fact]
     public void ImplicitOperator_ShouldParse_StringToZipcode()
     {
-        ZipCode zipCode = "59157408";
+        ZipCode? zipCode = "59157408";
         Assert.True(zipCode?.IsValid);
     }
 }
