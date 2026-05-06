@@ -62,4 +62,30 @@ public class DotEnvProviderTests : IDisposable
         Assert.Null(ex);
         Assert.False(provider.TryGet("ANY", out _));
     }
+
+    [Fact]
+    public void Load_HierarchicalKeys_ConvertsDoubleUnderscoreToColon()
+    {
+        string envFile = Path.Combine(_tempDir, ".env");
+        File.WriteAllLines(envFile, [
+            "Database__Host=localhost",
+            "Database__Port=5432",
+            "Database__Credentials__Username=admin",
+            "Database__Credentials__Password=secret"
+        ]);
+
+        DotEnvOptions options = new() { Directory = _tempDir, FileName = ".env" };
+        DotEnvProvider provider = new(options);
+
+        provider.Load();
+
+        Assert.True(provider.TryGet("Database:Host", out string? host));
+        Assert.Equal("localhost", host);
+        Assert.True(provider.TryGet("Database:Port", out string? port));
+        Assert.Equal("5432", port);
+        Assert.True(provider.TryGet("Database:Credentials:Username", out string? username));
+        Assert.Equal("admin", username);
+        Assert.True(provider.TryGet("Database:Credentials:Password", out string? password));
+        Assert.Equal("secret", password);
+    }
 }

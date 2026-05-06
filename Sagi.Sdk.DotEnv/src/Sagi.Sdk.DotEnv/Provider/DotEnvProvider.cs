@@ -22,7 +22,9 @@ public class DotEnvProvider : ConfigurationProvider
         IReadOnlyDictionary<string, string> entries = DotEnvParser.Parse(lines);
 
         Data = new Dictionary<string, string?>(
-            entries.ToDictionary(kvp => kvp.Key, kvp => (string?)kvp.Value),
+            entries.ToDictionary(
+                kvp => kvp.Key.Replace("__", ConfigurationPath.KeyDelimiter),
+                kvp => (string?)kvp.Value),
             StringComparer.OrdinalIgnoreCase);
     }
 }
