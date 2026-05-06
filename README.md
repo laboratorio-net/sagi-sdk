@@ -6,6 +6,7 @@ Este repositório reúne SDKs para integração com diferentes serviços e padr�
 
 - [Sagi.Sdk.AWS.DynamoDb](Sagi.Sdk.AWS.DynamoDb/src/Sagi.Sdk.AWS.DynamoDb/README.md)
 - [Sagi.Sdk.Domain](Sagi.Sdk.Domain/src/Sagi.Sdk.Domain/README.md)
+- [Sagi.Sdk.DotEnv](Sagi.Sdk.DotEnv/src/Sagi.Sdk.DotEnv/README.md)
 - [Sagi.Sdk.MongoDb](Sagi.Sdk.MongoDb/src/Sagi.Sdk.MongoDb/README.md)
 - [Sagi.Sdk.Results](Sagi.Sdk.Results/src/Sagi.Sdk.Results/README.md)
 

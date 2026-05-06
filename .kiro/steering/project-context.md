@@ -2,11 +2,11 @@
 
 ## Visão Geral
 
-Monorepo .NET 8 com 4 SDKs independentes para integração com serviços e padrões utilizados nos projetos Sagi. Cada SDK segue a mesma estrutura: `src/` com a biblioteca e `tests/` com os testes.
+Monorepo .NET 10 com 5 SDKs independentes para integração com serviços e padrões utilizados nos projetos Sagi. Cada SDK segue a mesma estrutura: `src/` com a biblioteca e `tests/` com os testes.
 
 **Solução:** `Sagi.Sdk.sln`  
-**Runtime:** .NET 8.0 (`global.json` com `rollForward: latestMajor`)  
-**Testes:** xUnit + NSubstitute + AutoFixture + Bogus  
+**Runtime:** .NET 10.0 (`global.json` com `rollForward: latestMajor`)  
+**Testes:** xUnit + NSubstitute + AutoFixture + Bogus + FsCheck (para property-based testing)  
 **Cobertura:** coverlet.collector
 
 ---
@@ -124,6 +124,31 @@ services.AddDynamoDb(cfg => {
 
 ---
 
+### 5. Sagi.Sdk.DotEnv
+**Caminho:** `Sagi.Sdk.DotEnv/src/Sagi.Sdk.DotEnv/`  
+**Propósito:** Integração de arquivos `.env` ao pipeline de configuração nativo do .NET (`IConfiguration` / `IConfigurationBuilder`).  
+**Dependências:** `Microsoft.Extensions.Configuration 8.0.0`
+
+**Arquivos principais:**
+- `Options/DotEnvOptions.cs` — `Directory` (default `Directory.GetCurrentDirectory()`) e `FileName` (default `".env"`). Sem validação própria.
+- `Parser/DotEnvParser.cs` — Classe estática. `Parse(IEnumerable<string>)` retorna `IReadOnlyDictionary<string, string>`. Ignora linhas vazias, comentários (`#`), linhas sem `=` e chaves vazias. Split no primeiro `=` para preservar `=` no valor.
+- `Provider/DotEnvSource.cs` — Implementa `IConfigurationSource`. Valida `Directory` e `FileName` com `ArgumentException.ThrowIfNullOrEmpty` no construtor.
+- `Provider/DotEnvProvider.cs` — Herda `ConfigurationProvider`. `Load()` lê o arquivo via `Path.Combine`, delega ao `DotEnvParser` e popula `Data` com `StringComparer.OrdinalIgnoreCase`. Arquivo ausente não lança exceção.
+- `Extensions/ConfigurationBuilderExtensions.cs` — `AddDotEnv()` e `AddDotEnv(Action<DotEnvOptions>)`.
+
+**Registro:**
+```csharp
+builder.AddDotEnv();                          // defaults: diretório atual + ".env"
+builder.AddDotEnv(opt => {
+    opt.Directory = "/app/config";
+    opt.FileName  = ".env.production";
+});
+```
+
+**Testes:** xUnit (unitários) + FsCheck.Xunit (property-based, 4 propriedades com `[Property(MaxTest = 100)]`).
+
+---
+
 ## Convenções de Código
 
 Definidas no `.editorconfig`:
@@ -140,6 +165,124 @@ Definidas no `.editorconfig`:
 
 ---
 
+## Convenções de Commit
+
+Todos os commits devem seguir o padrão **Conventional Commits** (Semantic Commit) para manter o histórico legível e permitir geração automática de changelogs.
+
+### Formato
+
+```
+<tipo>(<escopo>): <assunto>
+
+<corpo>
+
+<rodapé>
+```
+
+### Regras
+
+1. **Assunto (primeira linha):**
+   - Máximo de 50 caracteres (limite padrão do Git)
+   - Minúscula após o tipo
+   - Sem ponto final
+   - Imperativo ("adiciona", não "adicionado" ou "adicionando")
+
+2. **Corpo (opcional, mas recomendado):**
+   - Separado do assunto por uma linha em branco
+   - Máximo de 72 caracteres por linha
+   - Explica **o que** e **por que**, não **como**
+   - Estilo release notes: lista de mudanças, impactos, breaking changes
+
+3. **Rodapé (opcional):**
+   - `BREAKING CHANGE:` para mudanças incompatíveis
+   - `Refs:` para referências a issues/PRs
+   - `Co-authored-by:` para co-autores
+
+### Tipos
+
+| Tipo | Descrição | Exemplo |
+|---|---|---|
+| `feat` | Nova funcionalidade | `feat(dotenv): adiciona suporte a arquivos .env` |
+| `fix` | Correção de bug | `fix(parser): corrige parsing de valores com =` |
+| `docs` | Documentação | `docs(readme): atualiza exemplos de uso` |
+| `style` | Formatação, espaços, ponto e vírgula | `style(domain): aplica editorconfig` |
+| `refactor` | Refatoração sem mudança de comportamento | `refactor(results): extrai validação para método` |
+| `perf` | Melhoria de performance | `perf(mongo): otimiza query de busca` |
+| `test` | Adição ou correção de testes | `test(dotenv): adiciona property tests` |
+| `build` | Build, dependências, CI/CD | `build: atualiza para .NET 10` |
+| `ci` | Configuração de CI/CD | `ci: adiciona workflow de testes` |
+| `chore` | Tarefas de manutenção | `chore: atualiza .gitignore` |
+| `revert` | Reverte commit anterior | `revert: reverte feat(dotenv)` |
+
+### Escopos
+
+Use o nome do SDK ou componente afetado:
+- `results`, `domain`, `mongo`, `dynamodb`, `dotenv`
+- `tests`, `docs`, `build`, `ci`
+- Omita o escopo se a mudança afeta múltiplos SDKs
+
+### Exemplos
+
+**Exemplo 1: Nova feature com corpo detalhado**
+```
+feat(dotenv): adiciona integração com IConfiguration
+
+Implementa DotEnvProvider e DotEnvSource para carregar arquivos .env
+no pipeline de configuração nativo do .NET.
+
+Mudanças:
+- DotEnvParser: parsing de linhas com suporte a comentários e valores com =
+- DotEnvProvider: herda ConfigurationProvider, arquivo ausente não lança exceção
+- ConfigurationBuilderExtensions: AddDotEnv() e AddDotEnv(Action<DotEnvOptions>)
+- 25 testes (8 unitários + 4 property-based com FsCheck)
+
+Refs: #42
+```
+
+**Exemplo 2: Bugfix**
+```
+fix(domain): corrige validação de CNPJ alfanumérico
+
+Ajusta regex para aceitar caracteres A-Z nas 12 primeiras posições
+conforme IN RFB nº 2.229/2024.
+
+BREAKING CHANGE: CNPJs com letras minúsculas agora são normalizados
+para maiúsculas antes da validação.
+```
+
+**Exemplo 3: Documentação**
+```
+docs(readme): adiciona Sagi.Sdk.DotEnv à lista de projetos
+```
+
+**Exemplo 4: Build/infra**
+```
+build: atualiza todos os projetos para .NET 10
+
+Migra TargetFramework de net8.0 para net10.0 em todos os csproj.
+Atualiza global.json e steering com nova versão do runtime.
+```
+
+**Exemplo 5: Refatoração**
+```
+refactor(dotenv): extrai validadores para classes internas
+
+Move lógica de validação numérica e alfanumérica para
+NumericValidator e AlphanumericValidator como private static class.
+
+Sem mudança de comportamento externo.
+```
+
+### Ferramentas
+
+Para validar commits localmente antes do push:
+```sh
+# Instalar commitlint (opcional)
+npm install -g @commitlint/cli @commitlint/config-conventional
+```
+
+---
+
 ## Estrutura de Testes
 
 Cada projeto tem testes em `tests/`:
@@ -147,6 +290,7 @@ Cada projeto tem testes em `tests/`:
 - `Sagi.Sdk.Results.Tests` — Testa `Error` e `Result<T>`
 - `Sagi.Sdk.MongoDb.Tests` — Testa `Document`, `MongoContext`, `ServicesExtensions`
 - `Sagi.Sdk.AWS.DynamoDb.Tests` — Testa contexto DynamoDB com FluentDocker
+- `Sagi.Sdk.DotEnv.Tests` — Testa `DotEnvParser`, `DotEnvProvider`, `DotEnvSource`, `ConfigurationBuilderExtensions` com xUnit e FsCheck
 
 **Fakes usados nos testes:**
 - `FakeEntity : Entity<Guid>` — expõe métodos protegidos para teste
@@ -155,6 +299,13 @@ Cada projeto tem testes em `tests/`:
 - `FakeContext : MongoContext<FakeDocument>` — contexto MongoDB de teste
 - `FakeModel` — modelo DynamoDB de teste com `TABLE_NAME = "fakeTable"`
 - `FakeSearch : AsyncSearch<FakeModel>` — mock de busca assíncrona DynamoDB
+
+**Property-Based Testing (DotEnv):**
+- `DotEnvParserPropertyTests.cs` — 4 propriedades com FsCheck.Xunit:
+  - Property 1: Round-trip de parsing (Requirements 1.3, 3.1, 3.7, 4.3, 5.6)
+  - Property 2: Valores com `=` preservados (Requirement 3.5)
+  - Property 3: Linhas inválidas não afetam o resultado (Requirements 3.2, 3.3, 3.4)
+  - Property 4: Idempotência do parsing (Requirements 3.1, 3.7)
 
 **Executar testes:**
 ```sh
@@ -172,11 +323,18 @@ Sagi.Sdk.Domain           (depende de Results)
     ↑
 Sagi.Sdk.AWS.DynamoDb     (depende de Results)
 Sagi.Sdk.MongoDb          (sem dependência dos outros SDKs)
+Sagi.Sdk.DotEnv           (sem dependência dos outros SDKs)
 ```
 
 ---
 
 ## Histórico de Alterações
+
+### [2026-05] Sagi.Sdk.DotEnv — Novo SDK
+
+Adicionado o SDK `Sagi.Sdk.DotEnv` ao monorepo. Integra arquivos `.env` ao pipeline de configuração nativo do .NET sem dependências externas além de `Microsoft.Extensions.Configuration`. Targeting `net10.0`. Inclui testes unitários (xUnit) e property-based tests (FsCheck.Xunit) cobrindo 4 propriedades de corretude do parser.
+
+---
 
 ### [2026-04] CNPJ Alfanumérico — IN RFB nº 2.229/2024
 
