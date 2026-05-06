@@ -27,3 +27,15 @@ Console.WriteLine($"DATABASE_URL : {config2["DATABASE_URL"]}");
 Console.WriteLine($"APP_NAME     : {config2["APP_NAME"]}");
 Console.WriteLine($"DEBUG        : {config2["DEBUG"]}");
 Console.WriteLine($"APP_SECRET   : {config2["APP_SECRET"]}");
+
+Console.WriteLine();
+
+// Demonstração 3: Sobreescrevendo appsettings
+IConfiguration config3 = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .AddDotEnv()
+    .Build();
+
+Console.WriteLine("=== Overwriting AppSettings ===");
+Console.WriteLine($"MyConfig : {config3["MyConfig"]}");
+Console.WriteLine($"MyOtherConfig : {config3["MyOtherConfig"]}");
