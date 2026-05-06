@@ -330,7 +330,44 @@ Sagi.Sdk.DotEnv           (sem dependência dos outros SDKs)
 
 ## Histórico de Alterações
 
+### [2026-05] Multi-Targeting — Suporte a .NET 8 e .NET 9
+
+#### Contexto
+
+Necessidade de retrocompatibilidade com .NET 8 e .NET 9 para os 5 SDKs do monorepo, mantendo suporte a .NET 10.
+
+#### Mudanças
+
+Todos os 5 projetos de produção foram atualizados para multi-targeting:
+- `Sagi.Sdk.Results/src/Sagi.Sdk.Results/Sagi.Sdk.Results.csproj`
+- `Sagi.Sdk.Domain/src/Sagi.Sdk.Domain/Sagi.Sdk.Domain.csproj`
+- `Sagi.Sdk.DotEnv/src/Sagi.Sdk.DotEnv/Sagi.Sdk.DotEnv.csproj`
+- `Sagi.Sdk.MongoDb/src/Sagi.Sdk.MongoDb/Sagi.Sdk.MongoDb.csproj`
+- `Sagi.Sdk.AWS.DynamoDb/src/Sagi.Sdk.AWS.DynamoDb/Sagi.Sdk.AWS.DynamoDb.csproj`
+
+Cada `.csproj` agora contém `<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>` em lugar de `<TargetFramework>net10.0</TargetFramework>`.
+
+Projetos de teste mantêm `<TargetFramework>net10.0</TargetFramework>` (sem multi-targeting).
+
+#### Decisões de Design
+
+- **Sem mudanças de código:** Nenhuma API exclusiva de .NET 10 foi usada nos SDKs, portanto nenhuma compilação condicional foi necessária.
+- **Sem ajustes de dependências:** Todas as versões atuais de pacotes NuGet já suportam net8.0 (MongoDB.Driver 3.3.0, AWSSDK.* 3.7.x, Microsoft.Extensions.* 9.0.5).
+- **MSBuild automático:** O MSBuild resolve automaticamente `<ProjectReference>` para o TFM correspondente (Domain → Results, DynamoDb → Results).
+- **Testes em net10.0 apenas:** Projetos de teste compilam apenas para .NET 10 para simplificar CI/CD e reduzir tempo de build.
+
+#### Padrão a Seguir
+
+Quando adicionar novos SDKs ou estender existentes:
+1. Configure multi-targeting nos projetos de produção: `<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>`
+2. Mantenha testes em `<TargetFramework>net10.0</TargetFramework>`
+3. Use `#if NET9_0_OR_GREATER` ou `#if NET10_0_OR_GREATER` apenas se APIs exclusivas forem necessárias
+4. Valide compatibilidade de dependências NuGet com net8.0 antes de adicionar
+
+---
+
 ### [2026-05] Sagi.Sdk.DotEnv — Novo SDK
+
 
 Adicionado o SDK `Sagi.Sdk.DotEnv` ao monorepo. Integra arquivos `.env` ao pipeline de configuração nativo do .NET sem dependências externas além de `Microsoft.Extensions.Configuration`. Targeting `net10.0`. Inclui testes unitários (xUnit) e property-based tests (FsCheck.Xunit) cobrindo 4 propriedades de corretude do parser.
 
